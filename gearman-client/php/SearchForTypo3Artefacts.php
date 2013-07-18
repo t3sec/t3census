@@ -37,7 +37,11 @@ if (is_array($gearmanStatus)) {
 	}
 
 	foreach($results as $url) {
-		$detectionResult = json_decode($client->do("TYPO3HostDetector", $url));
+		if (method_exists($client, 'doNormal')) {
+			$detectionResult = json_decode($client->doNormal("TYPO3HostDetector", $url));
+		} else {
+			$detectionResult = json_decode($client->do("TYPO3HostDetector", $url));
+		}
 
 		if (is_object($detectionResult)) {
 			if (is_null($detectionResult->port) || is_null($detectionResult->ip))  continue;

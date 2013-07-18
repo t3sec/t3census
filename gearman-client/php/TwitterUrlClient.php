@@ -88,7 +88,11 @@ if (is_object($res)) {
 			}
 		}
 
-		$detectionResult = json_decode($client->doNormal('TYPO3HostDetector', $row['url_text']));
+		if (method_exists($client, 'doNormal')) {
+			$detectionResult = json_decode($client->doNormal('TYPO3HostDetector', $row['url_text']));
+		} else {
+			$detectionResult = json_decode($client->do('TYPO3HostDetector', $row['url_text']));
+		}
 		#print_r($detectionResult);
 
 		if (is_object($detectionResult)) {
