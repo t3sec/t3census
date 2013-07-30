@@ -25,8 +25,8 @@ if (is_array($gearmanStatus)) {
 			.' WHERE s.updated IS NULL AND h.typo3_installed=1'
 			.' GROUP BY s.server_id'
 			.' HAVING typo3hosts >= 1'
-			.' ORDER BY typo3hosts DESC LIMIT 100;';
-	$query = 'SELECT updated,server_id,INET_NTOA(server_ip) AS server_ip FROM server WHERE NOT locked AND updated IS NULL ORDER BY RAND() LIMIT 100;';
+			.' ORDER BY typo3hosts DESC LIMIT 300;';
+	$query = 'SELECT updated,server_id,INET_NTOA(server_ip) AS server_ip FROM server WHERE NOT locked AND updated IS NULL ORDER BY RAND() LIMIT 5000;';
 	#echo($query . PHP_EOL);
 
 	if ($res = $mysqli->query($query)) {
@@ -34,7 +34,7 @@ if (is_array($gearmanStatus)) {
 		$date = new DateTime();
 
 		while ($row = $res->fetch_assoc()) {
-			if (isServerLocked($mysqli, intval($row['server_ip'])) || isServerUpdated($mysqli, intval($row['server_ip']))) {
+			if (isServerLocked($mysqli, intval($row['server_id'])) || isServerUpdated($mysqli, intval($row['server_id']))) {
 				continue;
 			} else {
 				$updateQuery = sprintf('UPDATE server SET locked=1 WHERE server_id=%u;',
@@ -120,9 +120,8 @@ function isServerLocked($objMysql, $serverId) {
 	$selectQuery = sprintf('SELECT 1 FROM server WHERE server_id=%u AND NOT locked;',
 		$serverId
 	);
+	#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
 	$res = $objMysql->query($selectQuery);
-	fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
-
 	if (is_object($res = $objMysql->query($selectQuery))) {
 
 		if ($res->num_rows == 1) {
@@ -135,7 +134,7 @@ function isServerLocked($objMysql, $serverId) {
 }
 
 function isServerUpdated($objMysql, $serverId) {
-    $isUpdated = TRUE;
+    $isUpdated = FALSE;
     $selectQuery = sprintf('SELECT 1 FROM server WHERE server_id=%u AND updated IS NOT NULL;',
         $serverId
     );
@@ -145,7 +144,7 @@ function isServerUpdated($objMysql, $serverId) {
     if (is_object($res = $objMysql->query($selectQuery))) {
 
         if ($res->num_rows == 1) {
-            $isUpdated = FALSE;
+            $isUpdated = TRUE;
         }
         $res->close();
     }
@@ -270,13 +269,13 @@ function persistServerPortMapping($mysqli, $serverId, $portId) {
 }
 
 function persistHost($objMysql, $serverId, $host) {
-	$selectQuery = sprintf('SELECT 1 FROM host WHERE fk_server_id=%u AND host_subdomain LIKE %s AND host_domain LIKE \'%s\' LIMIT 1',
+	$selectQuery = sprintf('SELECT host_id FROM host WHERE fk_server_id=%u AND host_subdomain LIKE %s AND host_domain LIKE \'%s\' LIMIT 1',
 		$serverId,
 		(is_null($host->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->subdomain) . '\''),
 		$host->registerableDomain
 	);
-	$selectRes = $objMysql->query($selectQuery);
 	fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
+	$selectRes = $objMysql->query($selectQuery);
 
 	if (is_object($selectRes)) {
 		$date = new DateTime();
@@ -294,15 +293,15 @@ function persistHost($objMysql, $serverId, $host) {
 				$date->format('Y-m-d H:i:s'),
 				$serverId
 			);
-			$insertResult = $objMysql->query($insertQuery);
 			#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $insertQuery));
+			$insertResult = $objMysql->query($insertQuery);
 			if (!is_bool($insertResult) || !$insertResult) {
 				fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $objMysql->error, $objMysql->errno));
 			}
 		} else {
 			$row = $selectRes->fetch_assoc();
 
-			$updateQuery = sprintf('UPDATE host SET typo3_installed=%u,typo3_versionstring=%s,host_name=NULL,host_scheme=\'%s\',host_subdomain=%s,host_domain=\'%s\',host_suffix=%s,host_path=%s,created=%s WHERE created IS NULL AND host_id=%u',
+			$updateQuery = sprintf('UPDATE host SET typo3_installed=%u,typo3_versionstring=%s,host_name=NULL,host_scheme=\'%s\',host_subdomain=%s,host_domain=\'%s\',host_suffix=%s,host_path=%s,created=\'%s\' WHERE created IS NULL AND host_id=%u',
 				($host->TYPO3 ? 1 : 0),
 				($host->TYPO3 && !empty($host->TYPO3version) ? '\'' . mysqli_real_escape_string($objMysql, $host->TYPO3version)  . '\'' : 'NULL'),
 				mysqli_real_escape_string($objMysql, $host->scheme),
@@ -313,8 +312,8 @@ function persistHost($objMysql, $serverId, $host) {
 				$date->format('Y-m-d H:i:s'),
 				$row['host_id']
 			);
-			$updateResult= $objMysql->query($updateQuery);
 			#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
+			$updateResult= $objMysql->query($updateQuery);
 			if (!is_bool($updateResult) || !$updateResult) {
 				fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $objMysql->error, $objMysql->errno));
 			}
