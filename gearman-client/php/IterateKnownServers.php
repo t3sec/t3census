@@ -69,6 +69,7 @@ if (is_array($gearmanStatus)) {
 
 					if (is_object($detectionResult)) {
 						if (is_null($detectionResult->port) || is_null($detectionResult->ip))  continue;
+						if (empty($detectionResult->TYPO3))  continue;
 
 						$portId = getPortId($mysqli, $detectionResult->port);
 
