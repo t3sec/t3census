@@ -3,6 +3,14 @@ SELECT COUNT(t.tweet_id)
 FROM twitter_tweet t JOIN twitter_url u ON (t.tweet_id = u.fk_tweet_id)
 WHERE NOT t.tweet_processed;
 
+-- Show unprocessed "TYPO3 servers"
+SELECT s.server_id,INET_NTOA(s.server_ip) AS server_ip,count(h.host_id) AS typo3hosts
+FROM server s RIGHT JOIN host h ON (s.server_id = h.fk_server_id)
+WHERE s.updated IS NULL AND h.typo3_installed=1
+GROUP BY s.server_id
+HAVING typo3hosts >= 1
+ORDER BY typo3hosts DESC
+
 -- Show stored CIDRs
 SELECT cidr_id,INET_NTOA(cidr_ip),mask_to_cidr(INET_NTOA(cidr_mask)) AS cidr,created,cidr_description FROM cidr;
 
@@ -20,6 +28,14 @@ SELECT COUNT(h.host_id) AS num_hosts,c.cidr_description
 FROM server s RIGHT JOIN host h ON (s.server_id = h.fk_server_id) INNER JOIN cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip)
 WHERE h.typo3_installed=1
 GROUP BY c.cidr_description;
+
+-- Show IP addresses with high number of TYPO3 installations which are not yet mapped to CIDRs
+SELECT s.server_id,INET_NTOA(server_ip),COUNT(h.host_id) AS num_hosts
+FROM server s LEFT JOIN host h ON (s.server_id = h.fk_server_id) LEFT JOIN cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip)
+WHERE h.typo3_installed=1 AND c.cidr_id IS NULL
+GROUP BY s.server_id
+HAVING num_hosts > 100
+ORDER BY num_hosts DESC;
 
 
 -- Process CIDR one-by-one starting from smallest subnet (hosts)
