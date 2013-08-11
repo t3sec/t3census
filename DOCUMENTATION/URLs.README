@@ -49,6 +49,9 @@ http://www.kalserhuette.at/
 # Search Query to process
 "Oops, an error occurred!"
 
+
+69.58.188.0/24 bitly Inc - why are ther TYPO3 sites?
+
 # Fingerprinting:
 typo3/contrib/RemoveXSS/RemoveXSS.php (since 4.2)
 typo3/contrib/extjs/INCLUDE_ORDER.txt (since 4.3)
