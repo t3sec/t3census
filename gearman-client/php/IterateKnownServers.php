@@ -51,13 +51,20 @@ if (is_array($gearmanStatus)) {
 				$urls = array();
 
 				echo(PHP_EOL . $row['server_id'] . ' ' . $row['server_ip']);
-
-				$urls = json_decode($client->do('ReverseIpLookup', $row['server_ip']));
+				if (method_exists($client, 'doNormal')) {
+					$urls = json_decode($client->doNormal('ReverseIpLookup', $row['server_ip']));
+				} else {
+					$urls = json_decode($client->do('ReverseIpLookup', $row['server_ip']));
+				}
 				print_r($urls);
 
 
 				foreach($urls as $url) {
-					$detectionResult = json_decode($client->do('TYPO3HostDetector', $url));
+					if (method_exists($client, 'doNormal')) {
+						$detectionResult = json_decode($client->doNormal('TYPO3HostDetector', $url));
+					} else {
+						$detectionResult = json_decode($client->do('TYPO3HostDetector', $url));
+					}
 #var_dump($detectionResult);
 
 					if (is_object($detectionResult)) {

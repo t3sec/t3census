@@ -157,7 +157,7 @@ function processSearchQueries($objMysql, $twitterAuthData) {
 function processUserUrls($user_name, $user_id, $twitter_id, $objMysql, $twitterAuthData, $since = NULL, $max = NULL, $status = array()) {
 	if (!array_key_exists('user_name', $status)) {
 		$status['user_name'] = $user_name;
-		$status['twitter_id'] = $twitter_id;
+		$status['twitter_id'] = $user_id;
 		$status['num_tweet_import'] = 0;
 		$status['num_url_import'] = 0;
 	}
