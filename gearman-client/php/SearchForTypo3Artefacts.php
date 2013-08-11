@@ -21,46 +21,50 @@ if (is_array($gearmanStatus)) {
 	// add the default server
 	$client->addServer($gearmanHost, 4730);
 
-	$results = array();
-	try {
-		$objLookup = new T3census\Bing\Api\ReverseIpLookup();
-		$objLookup->setAccountKey('')->setEndpoint('https://api.datamarket.azure.com/Bing/Search');
-		#$results = $objLookup->setQuery('fileadmin/user_upload')->setOffset(0)->setMaxResults(500)->getResults();
-		#$results = $objLookup->setQuery('showuid')->setOffset(0)->setMaxResults(500)->getResults();
-		#$results = $objLookup->setQuery('no_cache')->setOffset(0)->setMaxResults(1500)->getResults();
-		$results = $objLookup->setQuery('instreamset:(url):tx_drwiki')->setOffset(0)->setMaxResults(1500)->getResults();
-		unset($objLookup);
-	} catch (\T3census\Bing\Api\Exception\ApiConsumeException $e) {
-		$objLookup = new \T3census\Bing\Scraper\ReverseIpLookup();
-		$objLookup->setEndpoint('http://www.bing.com/search');
-		#$results = $objLookup->setQuery('fileadmin/user_upload')->setOffset(0)->setMaxResults(500)->getResults();
-		#$results = $objLookup->setQuery('showuid')->setOffset(0)->setMaxResults(500)->getResults();
-		#$results = $objLookup->setQuery('no_cache')->setOffset(0)->setMaxResults(1500)->getResults();
-		$results = $objLookup->setQuery('instreamset:(url):tx_drwiki')->setOffset(0)->setMaxResults(1500)->getResults();
-		unset($objLookup);
-	}
+	$languages = array('ar','be','da','de','hr','el','en','es','fi','fr','hi','hu','id','it','ja','ko','nl','no','pt','ro','ru','sk','sv','tr','uk','vi');
 
-	foreach($results as $url) {
-		if (method_exists($client, 'doNormal')) {
-			$detectionResult = json_decode($client->doNormal("TYPO3HostDetector", $url));
-		} else {
-			$detectionResult = json_decode($client->do("TYPO3HostDetector", $url));
+	foreach ($languages as $language) {
+		$results = array();
+		try {
+			$objLookup = new T3census\Bing\Api\ReverseIpLookup();
+			$objLookup->setAccountKey('')->setEndpoint('https://api.datamarket.azure.com/Bing/Search');
+			#$results = $objLookup->setQuery('fileadmin/user_upload language:'. $language)->setOffset(0)->setMaxResults(1500)->getResults();
+			#$results = $objLookup->setQuery('showuid language:'. $language)->setOffset(0)->setMaxResults(1500)->getResults();
+			#$results = $objLookup->setQuery('no_cache language:'. $language)->setOffset(0)->setMaxResults(1500)->getResults();
+			$results = $objLookup->setQuery('instreamset:(url):indexed_search language:' . $language)->setOffset(0)->setMaxResults(1500)->getResults();
+			unset($objLookup);
+		} catch (\T3census\Bing\Api\Exception\ApiConsumeException $e) {
+			$objLookup = new \T3census\Bing\Scraper\ReverseIpLookup();
+			$objLookup->setEndpoint('http://www.bing.com/search');
+			#$results = $objLookup->setQuery('fileadmin/user_upload language:'. $language)->setOffset(0)->setMaxResults(1500)->getResults();
+			#$results = $objLookup->setQuery('showuid language:' . $language)->setOffset(0)->setMaxResults(1500)->getResults();
+			#$results = $objLookup->setQuery('no_cache language:'. $language)->setOffset(0)->setMaxResults(1500)->getResults();
+			$results = $objLookup->setQuery('instreamset:(url):indexed_search language:' . $language)->setOffset(0)->setMaxResults(1500)->getResults();
+			unset($objLookup);
 		}
+
+		foreach($results as $url) {
+			if (method_exists($client, 'doNormal')) {
+				$detectionResult = json_decode($client->doNormal("TYPO3HostDetector", $url));
+			} else {
+				$detectionResult = json_decode($client->do("TYPO3HostDetector", $url));
+			}
 
 			if (is_object($detectionResult)) {
 				if (is_null($detectionResult->port) || is_null($detectionResult->ip))  continue;
 				if (empty($detectionResult->TYPO3))  continue;
 
-			$portId = getPortId($mysqli, $detectionResult->port);
-			$serverId = getServerId($mysqli, $detectionResult->ip);
-			persistServerPortMapping($mysqli, $serverId, $portId);
+				$portId = getPortId($mysqli, $detectionResult->port);
+				$serverId = getServerId($mysqli, $detectionResult->ip);
+				persistServerPortMapping($mysqli, $serverId, $portId);
 
-print_r($detectionResult);
+	print_r($detectionResult);
 
-			$result = $mysqli->query("SELECT 1 FROM host WHERE created IS NOT NULL AND host_name LIKE CONCAT('" . mysqli_real_escape_string($mysqli, $detectionResult->protocol) . "','" . mysqli_real_escape_string($mysqli, $detectionResult->host) . "') LIMIT 1;" );
-			if ($result->num_rows == 0) {
-				echo(PHP_EOL . 'persist');
-				persistHost($mysqli, $serverId, $detectionResult);
+				$result = $mysqli->query("SELECT 1 FROM host WHERE created IS NOT NULL AND host_name LIKE CONCAT('" . mysqli_real_escape_string($mysqli, $detectionResult->protocol) . "','" . mysqli_real_escape_string($mysqli, $detectionResult->host) . "') LIMIT 1;" );
+				if ($result->num_rows == 0) {
+					echo(PHP_EOL . 'persist');
+					persistHost($mysqli, $serverId, $detectionResult);
+				}
 			}
 		}
 	}
