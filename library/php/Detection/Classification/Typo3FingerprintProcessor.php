@@ -83,14 +83,31 @@ class Typo3FingerprintProcessor extends \T3census\Detection\AbstractProcessor im
 				'TYPO3version' => 'TYPO3 4.7 CMS',
 				'newFiles' => array(
 					'typo3/contrib/videojs/video-js/video.js',
-					'typo3/contrib/flowplayer/src/javascript/flowplayer.js/flowplayer-3.2.10.js'
+					'typo3/contrib/flowplayer/src/javascript/flowplayer.js/flowplayer-3.2.10.js',
 				)
 			),
 			4 => array(
 				'TYPO3version' => 'TYPO3 4.6 CMS',
 				'newFiles' => array(
 					'typo3/contrib/codemirror/contrib/scheme/js/parsescheme.js',
-					'typo3/sysext/css_styled_content/static/v4.5/setup.txt'
+					'typo3/sysext/css_styled_content/static/v4.5/setup.txt',
+				)
+			),
+			5 => array(
+				'TYPO3version' => 'TYPO3 4.5 CMS',
+				'newFiles' => array(
+					'typo3/js/livesearch.js',
+					'typo3/contrib/extjs/resources/css/visual/pivotgrid.css',
+					'typo3/contrib/modernizr/modernizr.min.js',
+					'typo3/contrib/extjs/locale/ext-lang-am.js',
+				)
+			),
+			6 => array(
+				'TYPO3version' => 'TYPO3 4.4 CMS',
+				'newFiles' => array(
+					'typo3/js/pagetreefiltermenu.js',
+					't3lib/js/extjs/ux/flashmessages.js',
+					'typo3/contrib/extjs/adapter/ext/ext-base-debug-w-comments.js',
 				)
 			),
 		);
