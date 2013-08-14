@@ -13,6 +13,7 @@ require_once $libraryDir . '/Detection/Classification/ExistingRequestsProcessor.
 require_once $libraryDir . '/Detection/Classification/HostOnlyProcessor.php';
 require_once $libraryDir . '/Detection/Classification/FullPathProcessor.php';
 require_once $libraryDir . '/Detection/Classification/Typo3ArtefactsProcessor.php';
+require_once $libraryDir . '/Detection/Classification/Typo3FingerprintProcessor.php';
 require_once $vendorDir . '/autoload.php';
 
 
@@ -50,7 +51,8 @@ class Typo3HostDetectorWorker {
 		unset($objShortener, $objHostNoRedirect, $objHostNoRedirect, $objHostRedirect, $objPathNoRedirect, $objPathRedirect);
 
 		if (is_bool($context->getIsTypo3Cms()) && $context->getIsTypo3Cms()) {
-			$objArtefacts = new \T3census\Detection\Classification\Typo3ArtefactsProcessor();
+			$objFingerprint = new \T3census\Detection\Classification\Typo3FingerprintProcessor();
+			$objArtefacts = new \T3census\Detection\Classification\Typo3ArtefactsProcessor($objFingerprint);
 			$objFullPath = new \T3census\Detection\Classification\FullPathProcessor($objArtefacts);
 			$objHost = new \T3census\Detection\Classification\HostOnlyProcessor($objFullPath);
 			$objRequest = new \T3census\Detection\Classification\ExistingRequestsProcessor($objHost);
