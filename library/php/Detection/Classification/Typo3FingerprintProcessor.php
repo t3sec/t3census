@@ -194,7 +194,7 @@ class Typo3FingerprintProcessor extends \T3census\Detection\AbstractProcessor im
 				if ($fetcherErrnoHostOnly === 0 && $responseHttpCode === 200) {
 					$isClassificationSuccessful = TRUE;
 					$TYPO3version = $data['TYPO3version'];
-					break;
+					break 2;
 				}
 
 				if (0 !== strcmp($hostOnlyUrl, $fullPathUrl)) {
@@ -204,7 +204,7 @@ class Typo3FingerprintProcessor extends \T3census\Detection\AbstractProcessor im
 					if ($fetcherErrnoHostOnly === 0 && $responseHttpCode === 200) {
 						$isClassificationSuccessful = TRUE;
 						$TYPO3version = $data['TYPO3version'];
-						break;
+						break 2;
 					}
 				}
 			}
