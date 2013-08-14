@@ -110,6 +110,64 @@ class Typo3FingerprintProcessor extends \T3census\Detection\AbstractProcessor im
 					'typo3/contrib/extjs/adapter/ext/ext-base-debug-w-comments.js',
 				)
 			),
+			7 => array(
+				'TYPO3version' => 'TYPO3 4.3 CMS',
+				'newFiles' => array(
+					't3lib/js/adminpanel.js',
+					'typo3/js/flashupload.js',
+					'typo3/contrib/extjs/ext-core.js',
+					'typo3/contrib/swfupload/swfupload.js',
+				)
+			),
+			8 => array(
+				'TYPO3version' => 'TYPO3 4.2 CMS',
+				'newFiles' => array(
+					'typo3/js/workspaces.js',
+					'typo3/contrib/scriptaculous/sound.js',
+					'typo3/templates/belog.html',
+				)
+			),
+			9 => array(
+				'TYPO3version' => 'TYPO3 4.1 CMS',
+				'newFiles' => array(
+					't3lib/jsfunc.inline.js',
+					'typo3/tree.js',
+					'typo3/contrib/prototype/prototype.js',
+					'typo3/contrib/scriptaculous/scriptaculous.js',
+				)
+			),
+			10 => array(
+				'TYPO3version' => 'TYPO3 4.0 CMS',
+				'newFiles' => array(
+					'typo3/tab.js',
+					'typo3/sysext/t3skin/ext_icon.gif',
+					'typo3/sysext/cms/tslib/media/fileicons/folder.gif',
+				)
+			),
+			11 => array(
+				'TYPO3version' => 'TYPO3 3.8 CMS',
+				'newFiles' => array(
+					't3lib/gfx/up.gif',
+					'typo3/mod/tools/em/download.png',
+					'typo3/sysext/install/imgs/copyrights.txt',
+				)
+			),
+			12 => array(
+				'TYPO3version' => 'TYPO3 3.7 CMS',
+				'newFiles' => array(
+					'misc/locallang_XML_dummy.xml',
+					't3lib/gfx/loginimage.jpg',
+					'typo3/mod/help/cshmanual/ext_icon.gif',
+				)
+			),
+			13 => array(
+				'TYPO3version' => 'TYPO3 3.6 CMS',
+				'newFiles' => array(
+					'misc/changes_in_typo3-ext.diff.txt',
+					't3lib/ext_php_api.dat',
+					'typo3/ext_php_api.dat',
+				)
+			),
 		);
 
 		$TYPO3version = NULL;
