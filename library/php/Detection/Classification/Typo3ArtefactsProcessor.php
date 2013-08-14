@@ -99,10 +99,8 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 					$isMatch = preg_match('/TYPO3 \d\.\d/', $metaGenerator, $matches);
 					if (is_int($isMatch) && $isMatch === 1 && is_array($matches) && count($matches) == 1) {
 						$context->setTypo3VersionString(array_shift($matches) . ' CMS');
-					} else {
-						$context->setTypo3VersionString($metaGenerator);
+						$isClassificationSuccessful = TRUE;
 					}
-					$isClassificationSuccessful = TRUE;
 				} else {
 					if (is_string($responseBodyFullPath) && strlen($responseBodyFullPath)) {
 						$objParser->setContent($responseBodyFullPath);
@@ -113,10 +111,8 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 							$isMatch = preg_match('/TYPO3 \d\.\d/', $metaGenerator, $matches);
 							if (is_int($isMatch) && $isMatch === 1 && is_array($matches) && count($matches) == 1) {
 								$context->setTypo3VersionString(array_shift($matches) . ' CMS');
-							} else {
-								$context->setTypo3VersionString($metaGenerator);
+								$isClassificationSuccessful = TRUE;
 							}
-							$isClassificationSuccessful = TRUE;
 						}
 					}
 				}

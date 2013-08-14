@@ -43,13 +43,11 @@ class ExistingRequestsProcessor extends \T3census\Detection\AbstractProcessor im
 				$metaGenerator = $objParser->getMetaGenerator();
 				if (!is_null($objParser->getMetaGenerator()) && is_string($objParser->getMetaGenerator()) && strpos($objParser->getMetaGenerator(), 'TYPO3') !== FALSE) {
 					$matches = array();
-					$isMatch = preg_match('/TYPO3 \d\.\d CMS/', $metaGenerator, $matches);
+					$isMatch = preg_match('/TYPO3 \d\.\d/', $metaGenerator, $matches);
 					if (is_int($isMatch) && $isMatch === 1 && is_array($matches) && count($matches) == 1) {
-						$context->setTypo3VersionString(array_shift($matches));
-					} else {
-						$context->setTypo3VersionString($metaGenerator);
+						$context->setTypo3VersionString(array_shift($matches) . ' CMS');
+						$isClassificationSuccessful = TRUE;
 					}
-					$isClassificationSuccessful = TRUE;
 				}
 				unset($objParser);
 			}
