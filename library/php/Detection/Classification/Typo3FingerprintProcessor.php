@@ -83,32 +83,29 @@ class Typo3FingerprintProcessor extends \T3census\Detection\AbstractProcessor im
 				$objHostOnlyUrl->path = $newFile;
 				$hostOnlyUrl = $objHostOnlyUrl->getUrl();
 
+
 				$pathSegments = explode('/', $newFile);
 				foreach($pathSegments as $segment) {
 					$objFullPathUrl->path->add($segment);
 				}
 				$fullPathUrl = $objFullPathUrl->getUrl();
 
-				echo($hostOnlyUrl . PHP_EOL);
+				unset($objFullPathUrl, $objHostOnlyUrl);
+
 				$objFetcher->setUrl($hostOnlyUrl)->fetchUrl(\T3census\Url\UrlFetcher::HTTP_HEAD, FALSE, FALSE);
 				$fetcherErrnoHostOnly = $objFetcher->getErrno();
 				$responseHttpCode = $objFetcher->getResponseHttpCode();
 				if ($fetcherErrnoHostOnly === 0 && $responseHttpCode === 200) {
-					var_dump($responseHttpCode);
-					echo(PHP_EOL . PHP_EOL);
 					$isClassificationSuccessful = TRUE;
 					$TYPO3version = $data['TYPO3version'];
 					break;
 				}
 
 				if (0 !== strcmp($hostOnlyUrl, $fullPathUrl)) {
-					echo($fullPathUrl . PHP_EOL);
 					$objFetcher->setUrl($fullPathUrl)->fetchUrl(\T3census\Url\UrlFetcher::HTTP_HEAD, FALSE, FALSE);
 					$fetcherErrnoHostOnly = $objFetcher->getErrno();
 					$responseHttpCode = $objFetcher->getResponseHttpCode();
 					if ($fetcherErrnoHostOnly === 0 && $responseHttpCode === 200) {
-						var_dump($responseHttpCode);
-						echo(PHP_EOL . PHP_EOL);
 						$isClassificationSuccessful = TRUE;
 						$TYPO3version = $data['TYPO3version'];
 						break;
@@ -116,7 +113,7 @@ class Typo3FingerprintProcessor extends \T3census\Detection\AbstractProcessor im
 				}
 			}
 		}
-		unset($fingerprintData, $urlFullPath, $pathString, $path, $urlFullPath, $urlHostOnly, $objUrl);
+		unset($fingerprintData, $urlFullPath, $pathString, $path, $urlFullPath, $urlHostOnly, $objUrl, $objFetcher);
 
 		if ($isClassificationSuccessful) {
 			$context->setTypo3VersionString($TYPO3version);
