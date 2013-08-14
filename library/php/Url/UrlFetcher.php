@@ -65,8 +65,8 @@ class UrlFetcher {
 			curl_setopt($curl, CURLOPT_NOBODY, TRUE);
 		} else {
 			curl_setopt($curl, CURLOPT_NOBODY, FALSE);
-			$result = curl_exec($curl);
 		}
+		$result = curl_exec($curl);
 
 		if (is_bool($retrieveCookies) && $retrieveCookies) {
 			$map = array();
