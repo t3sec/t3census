@@ -30,13 +30,27 @@ CREATE TABLE server (
 )
 	ENGINE =InnoDB;
 
+CREATE TABLE cidr_maintainer (
+  maintainer_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  maintainer_description VARCHAR(255) NOT NULL,
+  created DATETIME NOT NULL,
+  updated DATETIME,
+  PRIMARY KEY (maintainer_id),
+	UNIQUE KEY unique_maintainer (maintainer_description)
+)
+	ENGINE =InnoDB;
+
 CREATE TABLE cidr (
 	cidr_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	cidr_ip INT UNSIGNED NOT NULL,
 	cidr_mask INT UNSIGNED NOT NULL,
-	cidr_description VARCHAR(255) DEFAULT NULL,
+	fk_maintainer_id INT UNSIGNED NOT NULL,
 	created DATETIME        NOT NULL,
 	updated DATETIME,
+	FOREIGN KEY fk_maintainer_id (fk_maintainer_id)
+	REFERENCES cidr_maintainer (maintainer_id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
 	PRIMARY KEY (cidr_id),
 	UNIQUE KEY unique_cidr (cidr_ip,cidr_mask)
 )

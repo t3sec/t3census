@@ -8,7 +8,6 @@ $vendorDir = realpath($dir . '/../../vendor');
 require_once $libraryDir . '/IpHelper.php';
 
 
-
 $mysqli = @new mysqli('127.0.0.1', 't3census_dbu', 't3census', 't3census_db', 33006);
 if ($mysqli->connect_errno) {
 	fwrite(STDERR, sprintf('ERROR: Database-Server: %s (Errno: %u)' . PHP_EOL, $mysqli->connect_error, $mysqli->connect_errno));
@@ -17,7 +16,6 @@ if ($mysqli->connect_errno) {
 
 
 $isSuccessful = TRUE;
-
 
 
 $foo = new IpHelper();
@@ -33,11 +31,11 @@ $range = IpHelper::getIpRangeByCidr('87.213.168.32/28');
 #print_r(IpHelper::getIpsFromCidr('87.213.168.32', '28'));
 
 
-$selectQuery = 'SELECT cidr_id,INET_NTOA(cidr_ip) AS ip, cidr_id AS cidr, mask_to_cidr(INET_NTOA(cidr_mask)) AS cidr, created, cidr_description '
-			.  'FROM cidr '
-			.  'WHERE updated IS NULL '
-			.  'ORDER BY cidr DESC '
-			.  'LIMIT 3;';
+$selectQuery = 'SELECT cidr_id,INET_NTOA(cidr_ip) AS ip, cidr_id AS cidr, mask_to_cidr(INET_NTOA(cidr_mask)) AS cidr, created '
+		. 'FROM cidr '
+		. 'WHERE updated IS NULL '
+		. 'ORDER BY cidr DESC '
+		. 'LIMIT 3;';
 #fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
 $res = $mysqli->query($selectQuery);
 
@@ -66,7 +64,7 @@ if (is_object($res)) {
 				$row['cidr_id']
 			);
 			#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
-			$updateResult= $mysqli->query($updateQuery);
+			$updateResult = $mysqli->query($updateQuery);
 			if (!is_bool($updateResult) || !$updateResult) {
 				fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $mysqli->error, $mysqli->errno));
 				$isSuccessful = FALSE;
@@ -92,4 +90,5 @@ if (is_bool($isSuccessful) && $isSuccessful) {
 function CliErrorHandler($errno, $errstr, $errfile, $errline) {
 	fwrite(STDERR, $errstr . ' in ' . $errfile . ' on ' . $errline . PHP_EOL);
 }
+
 ?>

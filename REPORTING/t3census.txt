@@ -416,7 +416,7 @@ mysql> SELECT host_domain,COUNT(host_id) AS num_hosts FROM host WHERE typo3_inst
 12 rows in set (1.04 sec)
 
 
-mysql> SELECT c.cidr_description,COUNT(h.host_id) AS num_hosts FROM server s INNER JOIN cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip) LEFT JOIN host h ON (s.server_id = h.fk_server_id) WHERE h.typo3_installed=1 GROUP BY c.cidr_description HAVING num_hosts > 100 ORDER BY num_hosts DESC;
+mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM server s INNER JOIN cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip) LEFT JOIN host h ON (s.server_id = h.fk_server_id) LEFT JOIN cidr_maintainer m ON (c.fk_maintainer_id = m.maintainer_id) WHERE h.typo3_installed=1 GROUP BY c.fk_maintainer_id HAVING num_hosts > 100 ORDER BY num_hosts DESC;
 +---------------------------------------------------------+-----------+
 | cidr_description                                        | num_hosts |
 +---------------------------------------------------------+-----------+
