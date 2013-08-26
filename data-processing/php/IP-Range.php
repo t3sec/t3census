@@ -8,7 +8,7 @@ $vendorDir = realpath($dir . '/../../vendor');
 require_once $libraryDir . '/IpHelper.php';
 
 
-$mysqli = @new mysqli('127.0.0.1', 't3census_dbu', 't3census', 't3census_db', 33006);
+$mysqli = @new mysqli('127.0.0.1', 'X', 'Y', 'Z', 3306);
 if ($mysqli->connect_errno) {
 	fwrite(STDERR, sprintf('ERROR: Database-Server: %s (Errno: %u)' . PHP_EOL, $mysqli->connect_error, $mysqli->connect_errno));
 	die(1);
