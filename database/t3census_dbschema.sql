@@ -31,11 +31,12 @@ CREATE TABLE server (
 	ENGINE =InnoDB;
 
 CREATE TABLE cidr_maintainer (
-  maintainer_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  maintainer_description VARCHAR(255) NOT NULL,
-  created DATETIME NOT NULL,
-  updated DATETIME,
-  PRIMARY KEY (maintainer_id),
+	maintainer_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	maintainer_description VARCHAR(255) NOT NULL,
+	own_infrastructure BOOL NOT NULL DEFAULT 0,
+	created DATETIME NOT NULL,
+	updated DATETIME,
+	PRIMARY KEY (maintainer_id),
 	UNIQUE KEY unique_maintainer (maintainer_description)
 )
 	ENGINE =InnoDB;
