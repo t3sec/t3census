@@ -31,7 +31,7 @@ $range = IpHelper::getIpRangeByCidr('87.213.168.32/28');
 #print_r(IpHelper::getIpsFromCidr('87.213.168.32', '28'));
 
 
-$selectQuery = 'SELECT cidr_id,INET_NTOA(cidr_ip) AS ip, cidr_id AS cidr, mask_to_cidr(INET_NTOA(cidr_mask)) AS cidr, created '
+$selectQuery = 'SELECT cidr_id,INET_NTOA(cidr_ip) AS ip, mask_to_cidr(INET_NTOA(cidr_mask)) AS cidr, created '
 		. 'FROM cidr '
 		. 'WHERE updated IS NULL '
 		. 'ORDER BY cidr DESC '
