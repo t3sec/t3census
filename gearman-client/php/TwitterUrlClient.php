@@ -126,11 +126,10 @@ if (is_bool($isSuccessful) && $isSuccessful) {
 }
 
 
-
-
 function isShortenerServiceHost($host) {
 	$shortenerServices = array(
 		'b-gat.es',
+		'base24.eu',
 		'bit.ly',
 		'buff.ly',
 		'csc0.ly',
@@ -288,4 +287,5 @@ function getPortId($mysqli, $port) {
 function CliErrorHandler($errno, $errstr, $errfile, $errline) {
 	fwrite(STDERR, $errstr . ' in ' . $errfile . ' on ' . $errline . PHP_EOL);
 }
+
 ?>

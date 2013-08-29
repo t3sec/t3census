@@ -17,6 +17,7 @@ class ShortenerRedirectOnlyProcessor extends \T3census\Detection\AbstractProcess
 
 	protected $shortenerServices = array(
 		'b-gat.es',
+		'base24.eu',
 		'bit.ly',
 		'buff.ly',
 		'csc0.ly',
