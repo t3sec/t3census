@@ -21,7 +21,7 @@ if (is_array($gearmanStatus)) {
 	// add the default server
 	$client->addServer($gearmanHost, 4730);
 
-	$languages = array('ar','be','da','de','hr','el','en','es','fi','fr','hi','hu','id','it','ja','ko','nl','no','pt','ro','ru','sk','sv','tr','uk','vi');
+	$languages = array('ar', 'be', 'da', 'de', 'hr', 'el', 'en', 'es', 'fi', 'fr', 'hi', 'hu', 'id', 'it', 'ja', 'ko', 'nl', 'no', 'pt', 'ro', 'ru', 'sk', 'sv', 'tr', 'uk', 'vi');
 
 	foreach ($languages as $language) {
 		$results = array();
