@@ -270,8 +270,9 @@ function persistServerPortMapping($mysqli, $serverId, $portId) {
 }
 
 function persistHost($objMysql, $serverId, $host) {
-	$selectQuery = sprintf('SELECT host_id FROM host WHERE fk_server_id=%u AND host_subdomain LIKE %s AND host_domain LIKE \'%s\' LIMIT 1',
+	$selectQuery = sprintf('SELECT host_id FROM host WHERE fk_server_id=%u AND host_scheme=\'%s\' AND host_subdomain LIKE %s AND host_domain LIKE \'%s\' LIMIT 1',
 		$serverId,
+		mysqli_real_escape_string($objMysql, $host->scheme),
 		(is_null($host->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->subdomain) . '\''),
 		$host->registerableDomain
 	);
@@ -302,14 +303,10 @@ function persistHost($objMysql, $serverId, $host) {
 		} else {
 			$row = $selectRes->fetch_assoc();
 
-			$updateQuery = sprintf('UPDATE host SET typo3_installed=%u,typo3_versionstring=%s,host_name=NULL,host_scheme=\'%s\',host_subdomain=%s,host_domain=\'%s\',host_suffix=%s,host_path=%s,created=\'%s\' WHERE created IS NULL AND host_id=%u',
+			$updateQuery = sprintf('UPDATE host SET typo3_installed=%u,typo3_versionstring=%s,host_path=%s,updated=\'%s\' WHERE created IS NULL AND host_id=%u',
 				($host->TYPO3 ? 1 : 0),
-				($host->TYPO3 && !empty($host->TYPO3version) ? '\'' . mysqli_real_escape_string($objMysql, $host->TYPO3version)  . '\'' : 'NULL'),
-				mysqli_real_escape_string($objMysql, $host->scheme),
-				(is_null($host->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql,$host->subdomain) . '\''),
-				$host->registerableDomain,
-				(is_null($host->publicSuffix) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql,$host->publicSuffix) . '\''),
-				(is_null($host->path) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql,$host->path) . '\''),
+				($host->TYPO3 && !empty($host->TYPO3version) ? '\'' . mysqli_real_escape_string($objMysql, $host->TYPO3version) . '\'' : 'NULL'),
+				(is_null($host->path) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->path) . '\''),
 				$date->format('Y-m-d H:i:s'),
 				$row['host_id']
 			);

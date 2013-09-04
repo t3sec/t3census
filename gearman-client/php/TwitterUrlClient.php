@@ -203,12 +203,8 @@ function persistHost($objMysql, $serverId, $host) {
 			$row = $selectRes->fetch_assoc();
 
 			$updateQuery = sprintf('UPDATE host '
-				. 'SET host_scheme=%s,host_subdomain=%s,host_domain=%s,host_suffix=%s,host_path=%s,typo3_installed=%u,typo3_versionstring=%s,updated=\'%s\',host_name=NULL '
+				. 'SET host_path=%s,typo3_installed=%u,typo3_versionstring=%s,updated=\'%s\' '
 				. 'WHERE host_id=%u;',
-				(is_null($host->scheme) ? NULL : '\'' . mysqli_real_escape_string($objMysql, $host->scheme) . '\''),
-				(is_null($host->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->subdomain) . '\''),
-				(is_null($host->registerableDomain) ? NULL : '\'' . mysqli_real_escape_string($objMysql, $host->registerableDomain) . '\''),
-				(is_null($host->publicSuffix) ? NULL : '\'' . mysqli_real_escape_string($objMysql, $host->publicSuffix) . '\''),
 				(is_null($host->path) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->path) . '\''),
 				($host->TYPO3 ? 1 : 0),
 				($host->TYPO3 && !empty($host->TYPO3version) ? '\'' . mysqli_real_escape_string($objMysql, $host->TYPO3version) . '\'' : 'NULL'),
