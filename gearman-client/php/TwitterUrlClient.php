@@ -104,7 +104,11 @@ if (is_object($res)) {
 			$serverId = getServerId($mysqli, $detectionResult->ip);
 
 			persistServerPortMapping($mysqli, $serverId, $portId);
-			persistHost($mysqli, $serverId, $detectionResult);
+
+				// persist only TYPO3 sites
+			if (!is_null($detectionResult->TYPO3) && is_bool($detectionResult->TYPO3) && $detectionResult->TYPO3) {
+				persistHost($mysqli, $serverId, $detectionResult);
+			}
 
 			$mysqli->query("UPDATE twitter_tweet SET tweet_processed = 1 WHERE tweet_id = " . intval($row['tweet_id']));
 		} else if (is_bool($detectionResult) && !$detectionResult) {
