@@ -14,10 +14,10 @@ $gearmanStatus = getGearmanServerStatus($gearmanHost);
 
 # available
 if (is_array($gearmanStatus)) {
-	$mysqli = new mysqli("127.0.0.1", "t3census_dbu", "t3census", "t3census_db", 3306);
+	$mysqli = new mysqli('127.0.0.1', '', '', '', 3306);
 
 	// construct a client object
-	$client= new GearmanClient();
+	$client = new GearmanClient();
 	// add the default server
 	$client->addServer($gearmanHost, 4730);
 
@@ -43,7 +43,7 @@ if (is_array($gearmanStatus)) {
 			unset($objLookup);
 		}
 
-		foreach($results as $url) {
+		foreach ($results as $url) {
 			if (method_exists($client, 'doNormal')) {
 				$detectionResult = json_decode($client->doNormal("TYPO3HostDetector", $url));
 			} else {
@@ -51,16 +51,16 @@ if (is_array($gearmanStatus)) {
 			}
 
 			if (is_object($detectionResult)) {
-				if (is_null($detectionResult->port) || is_null($detectionResult->ip))  continue;
-				if (empty($detectionResult->TYPO3))  continue;
+				if (is_null($detectionResult->port) || is_null($detectionResult->ip)) continue;
+				if (empty($detectionResult->TYPO3)) continue;
 
 				$portId = getPortId($mysqli, $detectionResult->port);
 				$serverId = getServerId($mysqli, $detectionResult->ip);
 				persistServerPortMapping($mysqli, $serverId, $portId);
 
-	print_r($detectionResult);
+				print_r($detectionResult);
 
-				$result = $mysqli->query("SELECT 1 FROM host WHERE created IS NOT NULL AND host_name LIKE CONCAT('" . mysqli_real_escape_string($mysqli, $detectionResult->protocol) . "','" . mysqli_real_escape_string($mysqli, $detectionResult->host) . "') LIMIT 1;" );
+				$result = $mysqli->query("SELECT 1 FROM host WHERE created IS NOT NULL AND host_name LIKE CONCAT('" . mysqli_real_escape_string($mysqli, $detectionResult->protocol) . "','" . mysqli_real_escape_string($mysqli, $detectionResult->host) . "') LIMIT 1;");
 				if ($result->num_rows == 0) {
 					echo(PHP_EOL . 'persist');
 					persistHost($mysqli, $serverId, $detectionResult);
@@ -74,21 +74,18 @@ if (is_array($gearmanStatus)) {
 }
 
 
-
-
-
 function getGearmanServerStatus($host = '127.0.0.1', $port = 4730) {
-	$status = null;
+	$status = NULL;
 
 	$handle = fsockopen($host, $port, $errorNumber, $errorString, 30);
-	if ($handle != null){
-		fwrite($handle,"status\n");
+	if ($handle != NULL) {
+		fwrite($handle, "status\n");
 		while (!feof($handle)) {
 			$line = fgets($handle, 4096);
-			if( $line==".\n"){
+			if ($line == ".\n") {
 				break;
 			}
-			if( preg_match("~^(.*)[ \t](\d+)[ \t](\d+)[ \t](\d+)~",$line,$matches) ){
+			if (preg_match("~^(.*)[ \t](\d+)[ \t](\d+)[ \t](\d+)~", $line, $matches)) {
 				$function = $matches[1];
 				$status['operations'][$function] = array(
 					'function' => $function,
@@ -98,14 +95,14 @@ function getGearmanServerStatus($host = '127.0.0.1', $port = 4730) {
 				);
 			}
 		}
-		fwrite($handle,"workers\n");
+		fwrite($handle, "workers\n");
 		while (!feof($handle)) {
 			$line = fgets($handle, 4096);
-			if( $line==".\n"){
+			if ($line == ".\n") {
 				break;
 			}
 			// FD IP-ADDRESS CLIENT-ID : FUNCTION
-			if( preg_match("~^(\d+)[ \t](.*?)[ \t](.*?) : ?(.*)~",$line,$matches) ){
+			if (preg_match("~^(\d+)[ \t](.*?)[ \t](.*?) : ?(.*)~", $line, $matches)) {
 				$fd = $matches[1];
 				$status['connections'][$fd] = array(
 					'fd' => $fd,
@@ -124,12 +121,12 @@ function getGearmanServerStatus($host = '127.0.0.1', $port = 4730) {
 function getServerId($mysqli, $server) {
 	$serverId = NULL;
 	/* Select queries return a resultset */
-	if ($result = $mysqli->query("SELECT server_id FROM server WHERE server_ip = INET_ATON('" . mysqli_real_escape_string($mysqli, $server) . "');" )) {
+	if ($result = $mysqli->query("SELECT server_id FROM server WHERE server_ip = INET_ATON('" . mysqli_real_escape_string($mysqli, $server) . "');")) {
 
 		if ($result->num_rows == 0) {
 			$date = new DateTime();
 			$foo = $mysqli->query("INSERT INTO server(server_ip,created) VALUES (INET_ATON('" . mysqli_real_escape_string($mysqli, $server) . "'), '" . $date->format('Y-m-d H:i:s') . "')");
-			if (!$foo)  echo "error-2: (" . $mysqli->errno . ") " . $mysqli->error;
+			if (!$foo) echo "error-2: (" . $mysqli->errno . ") " . $mysqli->error;
 			$serverId = $mysqli->insert_id;
 		} else {
 			$row = $result->fetch_assoc();
@@ -150,7 +147,7 @@ function getPortId($mysqli, $port) {
 
 		if ($result->num_rows == 0) {
 			$foo = $mysqli->query("INSERT INTO port(port_number) VALUES (" . intval($port) . ")");
-			if (!$foo)  echo "error-1: (" . $mysqli->errno . ") " . $mysqli->error;
+			if (!$foo) echo "error-1: (" . $mysqli->errno . ") " . $mysqli->error;
 			$portId = $mysqli->insert_id;
 		} else {
 			$row = $result->fetch_assoc();
@@ -169,7 +166,7 @@ function persistServerPortMapping($mysqli, $serverId, $portId) {
 
 		if ($result->num_rows == 0) {
 			$foo = $mysqli->query("INSERT INTO server_port(fk_port_id,fk_server_id) VALUES (" . intval($portId) . ", " . intval($serverId) . ")");
-			if (!$foo)  echo "error-3: (" . $mysqli->errno . ") " . $mysqli->error;
+			if (!$foo) echo "error-3: (" . $mysqli->errno . ") " . $mysqli->error;
 		}
 
 		/* free result set */
@@ -193,12 +190,12 @@ function persistHost($objMysql, $serverId, $host) {
 			$insertQuery = sprintf('INSERT INTO host(typo3_installed,typo3_versionstring,host_name,host_scheme,host_subdomain,host_domain,host_suffix,host_path,created,fk_server_id) ' .
 				'VALUES(%u,%s,NULL,\'%s\',%s,\'%s\',%s,%s,\'%s\',%u);',
 				($host->TYPO3 ? 1 : 0),
-				($host->TYPO3 && !empty($host->TYPO3version) ? '\'' . mysqli_real_escape_string($objMysql, $host->TYPO3version)  . '\'' : 'NULL'),
+				($host->TYPO3 && !empty($host->TYPO3version) ? '\'' . mysqli_real_escape_string($objMysql, $host->TYPO3version) . '\'' : 'NULL'),
 				mysqli_real_escape_string($objMysql, $host->scheme),
-				(is_null($host->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql,$host->subdomain) . '\''),
+				(is_null($host->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->subdomain) . '\''),
 				$host->registerableDomain,
-				(is_null($host->publicSuffix) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql,$host->publicSuffix) . '\''),
-				(is_null($host->path) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql,$host->path) . '\''),
+				(is_null($host->publicSuffix) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->publicSuffix) . '\''),
+				(is_null($host->path) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->path) . '\''),
 				$date->format('Y-m-d H:i:s'),
 				$serverId
 			);
@@ -212,16 +209,16 @@ function persistHost($objMysql, $serverId, $host) {
 
 			$updateQuery = sprintf('UPDATE host SET typo3_installed=%u,typo3_versionstring=%s,host_name=NULL,host_scheme=\'%s\',host_subdomain=%s,host_domain=\'%s\',host_suffix=%s,host_path=%s,created=\'%s\' WHERE created IS NULL AND host_id=%u',
 				($host->TYPO3 ? 1 : 0),
-				($host->TYPO3 && !empty($host->TYPO3version) ? '\'' . mysqli_real_escape_string($objMysql, $host->TYPO3version)  . '\'' : 'NULL'),
+				($host->TYPO3 && !empty($host->TYPO3version) ? '\'' . mysqli_real_escape_string($objMysql, $host->TYPO3version) . '\'' : 'NULL'),
 				mysqli_real_escape_string($objMysql, $host->scheme),
-				(is_null($host->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql,$host->subdomain) . '\''),
+				(is_null($host->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->subdomain) . '\''),
 				$host->registerableDomain,
-				(is_null($host->publicSuffix) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql,$host->publicSuffix) . '\''),
-				(is_null($host->path) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql,$host->path) . '\''),
+				(is_null($host->publicSuffix) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->publicSuffix) . '\''),
+				(is_null($host->path) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->path) . '\''),
 				$date->format('Y-m-d H:i:s'),
 				$row['host_id']
 			);
-			$updateResult= $objMysql->query($updateQuery);
+			$updateResult = $objMysql->query($updateQuery);
 			#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
 			if (!is_bool($updateResult) || !$updateResult) {
 				fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $objMysql->error, $objMysql->errno));
@@ -230,4 +227,5 @@ function persistHost($objMysql, $serverId, $host) {
 		$selectRes->close();
 	}
 }
+
 ?>

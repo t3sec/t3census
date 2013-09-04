@@ -39,16 +39,16 @@ unset($gearmanStatus);
 
 
 $isSuccessful = TRUE;
-$selectQuery = 'SELECT * FROM host WHERE typo3_installed=1 AND typo3_versionstring IS NULL;';
+$selectQuery = 'SELECT * FROM host WHERE typo3_installed=1 AND typo3_versionstring IS NULL ORDER BY host_id;';
 $res = $mysqli->query($selectQuery);
 fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
 
 if (is_object($res)) {
 
-	if ($mysqli->affected_rows > 0) {
+	if ($res->num_rows > 0) {
 
 		$date = new DateTime();
-		$client= new GearmanClient();
+		$client = new GearmanClient();
 		$client->addServer($gearmanHost, $gearmanPort);
 
 		while ($row = $res->fetch_assoc()) {
@@ -57,29 +57,39 @@ if (is_object($res)) {
 			$url .= (is_null($row['host_subdomain']) ? '' : $row['host_subdomain'] . '.');
 			$url .= $row['host_domain'];
 			$url .= (is_null($row['host_path']) ? '' : '/' . ltrim($row['host_path'], '/'));
-			#fwrite(STDOUT, $url . PHP_EOL);
 
 			$detectionResult = json_decode($client->doNormal($gearmanFunction, $url));
 			if (is_object($detectionResult)) {
 
+				/*
 				if (!property_exists($detectionResult, 'TYPO3version')) {
 					#print_r($row);
-					fwrite(STDOUT, $url . PHP_EOL);
+					fwrite(STDOUT, 'NO RESULT:' . $url . PHP_EOL);
 					#print_r($detectionResult);
 					break;
 				}
+				*/
 
 				if (property_exists($detectionResult, 'TYPO3') && is_bool($detectionResult->TYPO3) && !$detectionResult->TYPO3) {
 					#print_r($row);
-					fwrite(STDOUT, 'NO TYPO3: ' .$url . PHP_EOL);
+					fwrite(STDOUT, 'NO TYPO3: ' . $url . PHP_EOL);
+					$updateQuery = sprintf('UPDATE host SET typo3_installed=0 WHERE host_id=%u;',
+						$row['host_id']
+					);
+					$updateResult = $mysqli->query($updateQuery);
+					if (!is_bool($updateResult) || !$updateResult) {
+						fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $mysqli->error, $mysqli->errno));
+						$isSuccessful = FALSE;
+						break;
+					}
 					#print_r($detectionResult);
-					break;
+					continue;
 				}
 
 				if (property_exists($detectionResult, 'TYPO3version') && is_string($detectionResult->TYPO3version)) {
 					#print_r($row);
 					#fwrite(STDOUT, $url . PHP_EOL);
-					#print_r($detectionResult);
+					print_r($detectionResult);
 
 					$updateQuery = sprintf('UPDATE host SET typo3_versionstring=%s,host_path=%s,updated=\'%s\' WHERE host_id=%u;',
 						(is_null($detectionResult->TYPO3version) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->TYPO3version) . '\''),
@@ -87,8 +97,8 @@ if (is_object($res)) {
 						$date->format('Y-m-d H:i:s'),
 						$row['host_id']
 					);
-					fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
-					$updateResult= $mysqli->query($updateQuery);
+					#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
+					$updateResult = $mysqli->query($updateQuery);
 					if (!is_bool($updateResult) || !$updateResult) {
 						fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $mysqli->error, $mysqli->errno));
 						$isSuccessful = FALSE;
@@ -119,4 +129,5 @@ if (is_bool($isSuccessful) && $isSuccessful) {
 function CliErrorHandler($errno, $errstr, $errfile, $errline) {
 	fwrite(STDERR, $errstr . ' in ' . $errfile . ' on ' . $errline . PHP_EOL);
 }
+
 ?>
