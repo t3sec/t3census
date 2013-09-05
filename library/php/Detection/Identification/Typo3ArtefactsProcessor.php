@@ -19,7 +19,7 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 	/**
 	 * Class constructor.
 	 *
-	 * @param  \T3census\Detection\ProcessorInterface|null  $successor
+	 * @param  \T3census\Detection\ProcessorInterface|null $successor
 	 */
 	public function __construct($successor = NULL) {
 		if (!is_null($successor)) {
@@ -30,7 +30,7 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 	/**
 	 * Processes context.
 	 *
-	 * @param  \T3census\Detection\Context  $context
+	 * @param  \T3census\Detection\Context $context
 	 * @return  void
 	 */
 	public function process(\T3census\Detection\Context $context) {
@@ -45,17 +45,17 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 		$path = $objUrl->path->getData();
 		$path = array_reverse($path);
 		$pathString = '';
-		$i=0;
+		$i = 0;
 		foreach ($path as $pathSegment) {
 			if (!empty($pathSegment)) {
 				if ($i === 0) {
 					if (!is_int(strpos($pathSegment, '.'))) {
-						$pathString =  $pathSegment . '/' . $pathString . '/';
+						$pathString = $pathSegment . '/' . $pathString . '/';
 					} else {
 						#$pathString =  '/' . $pathString ;
 					}
 				} else {
-					$pathString =  '/' . $pathSegment . $pathString;
+					$pathString = '/' . $pathSegment . $pathString;
 				}
 			}
 			$i++;
@@ -90,9 +90,10 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 		$fetcherErrnoRandom = $objFetcher->getErrno();
 
 		if ($fetcherErrnoFileadmin === 0 && $fetcherErrnoSysext === 0 && $fetcherErrnoRandom === 0
-				&& $fetcherHttpCodeFileadmin === 403 && $fetcherHttpCodeSysext === 403 && $fetcherHttpCodeRandom !== 403) {
-			if (is_null($context->getIp()))  $context->setIp($objFetcher->getIpAddress());
-			if (is_null($context->getPort()))  $context->setPort($objFetcher->getPort());
+				&& $fetcherHttpCodeFileadmin === 403 && $fetcherHttpCodeSysext === 403 && $fetcherHttpCodeRandom !== 403
+		) {
+			if (is_null($context->getIp())) $context->setIp($objFetcher->getIpAddress());
+			if (is_null($context->getPort())) $context->setPort($objFetcher->getPort());
 			$context->setUrl($urlHostOnly);
 			$context->setIsTypo3Cms(TRUE);
 			$isIdentificationSuccessful = TRUE;
@@ -125,9 +126,10 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 				$fetcherErrnoRandom = $objFetcher->getErrno();
 
 				if ($fetcherErrnoFileadmin === 0 && $fetcherErrnoSysext === 0 && $fetcherErrnoRandom === 0
-						&& $fetcherHttpCodeFileadmin === 403 && $fetcherHttpCodeSysext === 403 && $fetcherHttpCodeRandom !== 403) {
-					if (is_null($context->getIp()))  $context->setIp($objFetcher->getIpAddress());
-					if (is_null($context->getPort()))  $context->setPort($objFetcher->getPort());
+						&& $fetcherHttpCodeFileadmin === 403 && $fetcherHttpCodeSysext === 403 && $fetcherHttpCodeRandom !== 403
+				) {
+					if (is_null($context->getIp())) $context->setIp($objFetcher->getIpAddress());
+					if (is_null($context->getPort())) $context->setPort($objFetcher->getPort());
 					$context->setUrl($urlFullPath);
 					$context->setIsTypo3Cms(TRUE);
 					$isIdentificationSuccessful = TRUE;
@@ -144,4 +146,5 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 		}
 	}
 }
+
 ?>

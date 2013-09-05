@@ -20,7 +20,7 @@ abstract class AbstractProcessor {
 	/**
 	 * Processes context.
 	 *
-	 * @param  \T3census\Detection\Context  $context
+	 * @param  \T3census\Detection\Context $context
 	 * @return  void
 	 */
 	public function process(\T3census\Detection\Context $context) {

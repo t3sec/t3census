@@ -139,7 +139,8 @@ class ReverseIpLookup {
 	public function setQuery($query) {
 		if (is_string($query)) {
 			$this->query = $query;
-			unset($this->results); $this->results = array();
+			unset($this->results);
+			$this->results = array();
 			$this->isProcessed = FALSE;
 		}
 
@@ -158,16 +159,16 @@ class ReverseIpLookup {
 			$auth = base64_encode($this->accountKey . ':' . $this->accountKey);
 			$data = array(
 				'http' => array(
-				'request_fulluri' => TRUE,
-				'ignore_errors' => FALSE,
-				'header' => "Authorization: Basic $auth")
+					'request_fulluri' => TRUE,
+					'ignore_errors' => FALSE,
+					'header' => "Authorization: Basic $auth")
 			);
 
 			$query = urlencode('\'' . $this->query . '\'');
 			$requestUri = $this->endpoint . '/Web?$format=' . $this->format . '&Query=' . $query . '&$skip=' . strval($this->offset);
 
 			$urls = array();
-			for($i=0; $i< 2500; $i++) {
+			for ($i = 0; $i < 2500; $i++) {
 				$context = stream_context_create($data);
 				$response = @file_get_contents($requestUri, 0, $context);
 
@@ -216,18 +217,18 @@ class ReverseIpLookup {
 	}
 
 	protected function getSimplifiedUrl(\Purl\Url $url) {
-		$simplifiedUrl= '';
+		$simplifiedUrl = '';
 
 		$simplifiedUrl .= $url->get('scheme') . '://';
 		$simplifiedUrl .= $url->get('host');
-		$simplifiedUrl .= (!is_null($url->get('port')) ? ':' . $url->get('port') .'/' : '/');
+		$simplifiedUrl .= (!is_null($url->get('port')) ? ':' . $url->get('port') . '/' : '/');
 
 		return $simplifiedUrl;
 	}
 
 	protected function extractUrlsFrom($results) {
 		$urls = array();
-		foreach($results->d->results as $value) {
+		foreach ($results->d->results as $value) {
 			#var_dump($value);
 			switch ($value->__metadata->type) {
 				case 'WebResult':
@@ -242,7 +243,8 @@ class ReverseIpLookup {
 
 	public function reset() {
 		$this->accountKey = $this->endpoint = $this->query = NULL;
-		unset($this->results); $this->results = array();
+		unset($this->results);
+		$this->results = array();
 		$this->isProcessed = FALSE;
 		$this->format = 'json';
 		$this->offset = 0;
@@ -250,4 +252,5 @@ class ReverseIpLookup {
 		return $this;
 	}
 }
+
 ?>

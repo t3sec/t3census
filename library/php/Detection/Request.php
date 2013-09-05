@@ -27,6 +27,7 @@ class Request {
 
 	/**
 	 * Keeps response cookies
+	 *
 	 * @var  array
 	 */
 	protected $cookies;
@@ -73,7 +74,7 @@ class Request {
 	}
 
 	/**
-	 * @param  mixed  $responseCode
+	 * @param  mixed $responseCode
 	 * @return  \T3census\Detection\Request
 	 */
 	public function setResponseCode($responseCode) {
@@ -90,7 +91,7 @@ class Request {
 	}
 
 	/**
-	 * @param  mixed  $url
+	 * @param  mixed $url
 	 * @return  \T3census\Detection\Request
 	 */
 	public function setRequestUrl($url) {
@@ -107,7 +108,7 @@ class Request {
 	}
 
 	/**
-	 * @param  mixed  $url
+	 * @param  mixed $url
 	 * @return  \T3census\Detection\Request
 	 */
 	public function setResponseUrl($url) {
@@ -123,4 +124,5 @@ class Request {
 		return $this->responseUrl;
 	}
 }
+
 ?>

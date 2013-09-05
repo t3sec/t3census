@@ -21,7 +21,7 @@ class HostOnlyProcessor extends \T3census\Detection\AbstractProcessor implements
 	/**
 	 * Class constructor.
 	 *
-	 * @param  \T3census\Detection\ProcessorInterface|null  $successor
+	 * @param  \T3census\Detection\ProcessorInterface|null $successor
 	 * @param  bool $allowRedirect
 	 */
 	public function __construct($successor = NULL, $allowRedirect = FALSE) {
@@ -44,7 +44,7 @@ class HostOnlyProcessor extends \T3census\Detection\AbstractProcessor implements
 	/**
 	 * Processes context.
 	 *
-	 * @param  \T3census\Detection\Context  $context
+	 * @param  \T3census\Detection\Context $context
 	 * @return  void
 	 */
 	public function process(\T3census\Detection\Context $context) {
@@ -62,8 +62,8 @@ class HostOnlyProcessor extends \T3census\Detection\AbstractProcessor implements
 			$objRequest->setRequestUrl($urlHostOnly)->setResponseUrl($urlHostOnly);
 			if ($objFetcher->getNumRedirects() >= 0) $objRequest->setResponseUrl($objFetcher->getUrl());
 
-			if (is_null($context->getIp()))  $context->setIp($objFetcher->getIpAddress());
-			if (is_null($context->getPort()))  $context->setPort($objFetcher->getPort());
+			if (is_null($context->getIp())) $context->setIp($objFetcher->getIpAddress());
+			if (is_null($context->getPort())) $context->setPort($objFetcher->getPort());
 
 			$objRequest->setResponseCode($objFetcher->getResponseHttpCode());
 			$responseBody = $objFetcher->getBody();
@@ -104,4 +104,5 @@ class HostOnlyProcessor extends \T3census\Detection\AbstractProcessor implements
 		}
 	}
 }
+
 ?>

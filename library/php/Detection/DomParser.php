@@ -26,7 +26,7 @@ class DomParser {
 	}
 
 	/**
-	 * @param string  $content
+	 * @param string $content
 	 * @return  \T3census\Detection\DomParser
 	 */
 	public function setContent($content) {
@@ -41,10 +41,10 @@ class DomParser {
 		}
 
 		if (strpos($content, 'DOCTYPE')) {
-			$content = preg_replace('/<!DOCTYPE.*>/sU','', $content);
+			$content = preg_replace('/<!DOCTYPE.*>/sU', '', $content);
 		}
 		if (strpos($content, 'xml')) {
-			$content = preg_replace('/<!xml.*>/sU','', $content);
+			$content = preg_replace('/<!xml.*>/sU', '', $content);
 		}
 
 		$this->content = $content;

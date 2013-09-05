@@ -19,19 +19,19 @@ if ($mysqli->connect_errno) {
 }
 
 $twitterAuthData = array(
-	'consumer_key'    => 'W',
+	'consumer_key' => 'W',
 	'consumer_secret' => 'X',
-	'token'           => 'Y',
-	'secret'          => 'Z',
+	'token' => 'Y',
+	'secret' => 'Z',
 );
 
 
 $isSuccessful = TRUE;
 $isSuccessful = processNewSubscribedUsers($mysqli, $twitterAuthData);
 sleep(5);
-if (is_bool($isSuccessful) && $isSuccessful)  processExistingSubscribedUsers($mysqli, $twitterAuthData);
+if (is_bool($isSuccessful) && $isSuccessful) processExistingSubscribedUsers($mysqli, $twitterAuthData);
 sleep(5);
-if (is_bool($isSuccessful) && $isSuccessful)  processSearchQueries($mysqli, $twitterAuthData);
+if (is_bool($isSuccessful) && $isSuccessful) processSearchQueries($mysqli, $twitterAuthData);
 
 mysqli_close($mysqli);
 fwrite(STDOUT, PHP_EOL);
@@ -44,14 +44,12 @@ if (is_bool($isSuccessful) && $isSuccessful) {
 }
 
 
-
-
 function processNewSubscribedUsers($objMysql, $twitterAuthData) {
 	$isSuccessful = TRUE;
 	$selectQuery = 'SELECT user.user_id,user.user_name,user.twitter_id,COUNT(url.url_id) num_urls '
-				 . 'FROM twitter_user user LEFT JOIN twitter_tweet t ON (user.user_id = t.fk_user_id) LEFT JOIN twitter_url url ON (t.tweet_id = url.fk_tweet_id) '
-				 . 'WHERE user.subscribed=1 '
-				 . 'GROUP BY user.user_id HAVING num_urls=0';
+			. 'FROM twitter_user user LEFT JOIN twitter_tweet t ON (user.user_id = t.fk_user_id) LEFT JOIN twitter_url url ON (t.tweet_id = url.fk_tweet_id) '
+			. 'WHERE user.subscribed=1 '
+			. 'GROUP BY user.user_id HAVING num_urls=0';
 	$res = $objMysql->query($selectQuery);
 	#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
 
@@ -87,9 +85,9 @@ function processExistingSubscribedUsers($objMysql, $twitterAuthData) {
 	$isSuccessful = TRUE;
 
 	$selectQuery = 'SELECT user.user_id,user.user_name,user.twitter_id, max(t.twitter_id) AS max '
-				 . 'FROM twitter_user user LEFT JOIN twitter_tweet t ON (user.user_id = t.fk_user_id) LEFT JOIN twitter_url url ON (t.tweet_id = url.fk_tweet_id) '
-				 . 'WHERE user.subscribed=1 '
-				 . 'GROUP BY user.user_id';
+			. 'FROM twitter_user user LEFT JOIN twitter_tweet t ON (user.user_id = t.fk_user_id) LEFT JOIN twitter_url url ON (t.tweet_id = url.fk_tweet_id) '
+			. 'WHERE user.subscribed=1 '
+			. 'GROUP BY user.user_id';
 	$res = $objMysql->query($selectQuery);
 	#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
 
@@ -126,9 +124,9 @@ function processSearchQueries($objMysql, $twitterAuthData) {
 	$isSuccessful = TRUE;
 
 	$selectQuery = 'SELECT user.user_id,user.user_name,user.twitter_id, max(t.twitter_id) AS max '
-				 . 'FROM twitter_user user LEFT JOIN twitter_tweet t ON (user.user_id = t.fk_user_id) '
-				 . 'LEFT JOIN twitter_url url ON (t.tweet_id = url.fk_tweet_id) '
-				 . 'WHERE user.subscribed=0;';
+			. 'FROM twitter_user user LEFT JOIN twitter_tweet t ON (user.user_id = t.fk_user_id) '
+			. 'LEFT JOIN twitter_url url ON (t.tweet_id = url.fk_tweet_id) '
+			. 'WHERE user.subscribed=0;';
 	$res = $objMysql->query($selectQuery);
 	#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
 
@@ -184,14 +182,14 @@ function processUserUrls($user_name, $user_id, $twitter_id, $objMysql, $twitterA
 			$numUrls = 0;
 			$lastUrl = '';
 			foreach ($response as $rawTweet) {
-				if (!is_array($rawTweet->entities->urls) || count($rawTweet->entities->urls) == 0)  continue;
+				if (!is_array($rawTweet->entities->urls) || count($rawTweet->entities->urls) == 0) continue;
 
 				if (is_int($status['twitter_id']) && $status['twitter_id'] === 0) {
 					$updateQuery = sprintf('UPDATE twitter_user SET twitter_id=%u WHERE user_name LIKE \'%s\';',
 						$rawTweet->user->id,
 						mysqli_real_escape_string($objMysql, $user_name)
 					);
-					$updateResult= $objMysql->query($updateQuery);
+					$updateResult = $objMysql->query($updateQuery);
 					#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
 					if (!is_bool($updateResult) || !$updateResult) {
 						fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $objMysql->error, $objMysql->errno));
@@ -215,8 +213,8 @@ function processUserUrls($user_name, $user_id, $twitter_id, $objMysql, $twitterA
 				$tweetId = $objMysql->insert_id;
 				$urls = $rawTweet->entities->urls;
 				$lastUrl = '';
-				foreach($urls as $url) {
-					if ($lastUrl === $url->expanded_url)  continue;
+				foreach ($urls as $url) {
+					if ($lastUrl === $url->expanded_url) continue;
 
 					$insertQuery = sprintf('INSERT INTO twitter_url(url_text,fk_tweet_id) VALUES(\'%s\',%u);',
 						mysqli_real_escape_string($objMysql, $url->expanded_url),
@@ -290,10 +288,10 @@ function processSearchUrls($queries, $objMysql, $twitterAuthData, $since = NULL,
 				$numUrls = 0;
 				$lastUrl = '';
 				foreach ($response->statuses as $rawTweet) {
-					if (!is_array($rawTweet->entities->urls) || count($rawTweet->entities->urls) == 0)  continue;
+					if (!is_array($rawTweet->entities->urls) || count($rawTweet->entities->urls) == 0) continue;
 
 					$twitterUser = array(
-						'id'   => $rawTweet->user->id,
+						'id' => $rawTweet->user->id,
 						'name' => $rawTweet->user->screen_name
 					);
 
@@ -315,8 +313,8 @@ function processSearchUrls($queries, $objMysql, $twitterAuthData, $since = NULL,
 					$tweetId = $objMysql->insert_id;
 					$urls = $rawTweet->entities->urls;
 					$lastUrl = '';
-					foreach($urls as $url) {
-						if ($lastUrl === $url->expanded_url)  continue;
+					foreach ($urls as $url) {
+						if ($lastUrl === $url->expanded_url) continue;
 
 						$insertQuery = sprintf('INSERT INTO twitter_url(url_text,fk_tweet_id) VALUES(\'%s\',%u);',
 							mysqli_real_escape_string($objMysql, $url->expanded_url),

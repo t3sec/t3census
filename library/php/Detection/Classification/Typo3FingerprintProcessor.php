@@ -17,7 +17,7 @@ class Typo3FingerprintProcessor extends \T3census\Detection\AbstractProcessor im
 	/**
 	 * Class constructor.
 	 *
-	 * @param  \T3census\Detection\ProcessorInterface|null  $successor
+	 * @param  \T3census\Detection\ProcessorInterface|null $successor
 	 */
 	public function __construct($successor = NULL) {
 		if (!is_null($successor)) {
@@ -28,7 +28,7 @@ class Typo3FingerprintProcessor extends \T3census\Detection\AbstractProcessor im
 	/**
 	 * Processes context.
 	 *
-	 * @param  \T3census\Detection\Context  $context
+	 * @param  \T3census\Detection\Context $context
 	 * @return  void
 	 */
 	public function process(\T3census\Detection\Context $context) {
@@ -42,12 +42,12 @@ class Typo3FingerprintProcessor extends \T3census\Detection\AbstractProcessor im
 		$path = $objUrl->path->getData();
 		$path = array_reverse($path);
 		$pathString = '';
-		$i=0;
+		$i = 0;
 		foreach ($path as $pathSegment) {
 			if (!empty($pathSegment)) {
 				if ($i === 0) {
 					if (!is_int(strpos($pathSegment, '.'))) {
-						$pathString =  $pathString . '/' . $pathSegment;
+						$pathString = $pathString . '/' . $pathSegment;
 					}
 				} else {
 					$pathString = $pathString . '/' . $pathSegment;
@@ -181,7 +181,7 @@ class Typo3FingerprintProcessor extends \T3census\Detection\AbstractProcessor im
 
 
 				$pathSegments = explode('/', $newFile);
-				foreach($pathSegments as $segment) {
+				foreach ($pathSegments as $segment) {
 					$objFullPathUrl->path->add($segment);
 				}
 				$fullPathUrl = $objFullPathUrl->getUrl();

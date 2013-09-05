@@ -11,7 +11,7 @@ class UrlNormalizer {
 	}
 
 	/**
-	 * @param  string  $originUrl
+	 * @param  string $originUrl
 	 * @return  UrlNormalizer  class instance
 	 */
 	public function setOriginUrl($originUrl) {

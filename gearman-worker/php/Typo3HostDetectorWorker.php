@@ -70,7 +70,7 @@ class Typo3HostDetectorWorker {
 		$result['registerableDomain'] = $objUrl->get('registerableDomain');
 		$result['publicSuffix'] = $objUrl->get('publicSuffix');
 		$path = $objUrl->get('path')->getPath();
-		$result['path'] = (is_string($path) && strlen($path) > 0 && 0 !== strcmp('/', $path) ? $path  : NULL);
+		$result['path'] = (is_string($path) && strlen($path) > 0 && 0 !== strcmp('/', $path) ? $path : NULL);
 		$result['TYPO3'] = (is_bool($context->getIsTypo3Cms()) && $context->getIsTypo3Cms());
 		$result['TYPO3version'] = $context->getTypo3VersionString();
 		unset($objUrl, $context);
@@ -82,14 +82,13 @@ class Typo3HostDetectorWorker {
 		$this->setUp();
 		$this->gearmanWorker->setTimeout(5000); //wake up after 5 seconds
 		echo "Starting...\n";
-		while(1) {
+		while (1) {
 			@$this->gearmanWorker->work();
-			if ($this->gearmanWorker->returnCode() == GEARMAN_TIMEOUT)
-			{
+			if ($this->gearmanWorker->returnCode() == GEARMAN_TIMEOUT) {
 				//do some other work here
 				continue;
 			}
-			if($this->gearmanWorker->returnCode() != GEARMAN_SUCCESS) {
+			if ($this->gearmanWorker->returnCode() != GEARMAN_SUCCESS) {
 				// do some error handling here
 				die("An error occured");
 			}

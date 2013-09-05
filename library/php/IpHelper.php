@@ -55,10 +55,12 @@ class IpHelper {
 	}
 
 	public static function isIpInCidr($ip, $net_addr, $net_mask) {
-		if ($net_mask <= 0){ return false; }
-		$ip_binary_string = sprintf("%032b",ip2long($ip));
-		$net_binary_string = sprintf("%032b",ip2long($net_addr));
-		return (substr_compare($ip_binary_string,$net_binary_string,0,$net_mask) === 0);
+		if ($net_mask <= 0) {
+			return FALSE;
+		}
+		$ip_binary_string = sprintf("%032b", ip2long($ip));
+		$net_binary_string = sprintf("%032b", ip2long($net_addr));
+		return (substr_compare($ip_binary_string, $net_binary_string, 0, $net_mask) === 0);
 	}
 
 	/**
@@ -71,7 +73,7 @@ class IpHelper {
 		/* get the base and the bits from the ban in the database */
 		list($base, $bits) = explode('/', $cidr);
 
-		if (strpos($bits, '.') !== false) {
+		if (strpos($bits, '.') !== FALSE) {
 			$bits = self::maskToCIDR($bits);
 		}
 
@@ -118,12 +120,12 @@ class IpHelper {
 		echo "Network Address:    " . long2ip($nw) . "\n";
 		echo "Broadcast Address:  " . long2ip($bc) . "\n";
 		echo "Number of Hosts:    " . ($bc - $nw - 1) . "\n";
-		echo "Host Range:         " . long2ip($nw + 1) . " -> " . long2ip($bc - 1)  . "\n";
+		echo "Host Range:         " . long2ip($nw + 1) . " -> " . long2ip($bc - 1) . "\n";
 	}
 
 	public static function getIpsFromCidr($ip, $cidr) {
 
-		$ips= array();
+		$ips = array();
 		$ip_count = 1 << (32 - $cidr);
 
 		$start = ip2long($ip);
@@ -155,39 +157,39 @@ class IpHelper {
 	public static function isIpMask($mask) {
 
 		$format = '';
-		if(preg_match("/[0-9]++\.[0-9]++\.[0-9]++\.[0-9]++/",$mask)){
+		if (preg_match("/[0-9]++\.[0-9]++\.[0-9]++\.[0-9]++/", $mask)) {
 			$format = "long";
-		}else{
-			if($mask<=30){
+		} else {
+			if ($mask <= 30) {
 				$format = "short";
-			}else{
-				return false;
+			} else {
+				return FALSE;
 			}
 		}
-		switch($format){
+		switch ($format) {
 			case 'long';
 				$mask = decbin(ip2long($mask));
 				break;
 			case 'short':
 				$tmp = $mask;
-				for($i=0; $i < $mask ;$i++){
-					$tmp.= 1;
+				for ($i = 0; $i < $mask; $i++) {
+					$tmp .= 1;
 				}
-				for($j=0; $j < (32 - $mask);$j++){
-					$tmp.= 0;
+				for ($j = 0; $j < (32 - $mask); $j++) {
+					$tmp .= 0;
 				}
 				$mask = $tmp;
 				break;
 		}
-		if(strlen($mask) <= 32){
-			for($i=0;$i<=32 ;$i++){
-				$bit = substr($mask,$i,1);
-				if(($bit - substr($mask,$i+1,1)) < 0){
-					return false;
+		if (strlen($mask) <= 32) {
+			for ($i = 0; $i <= 32; $i++) {
+				$bit = substr($mask, $i, 1);
+				if (($bit - substr($mask, $i + 1, 1)) < 0) {
+					return FALSE;
 				}
 			}
 		}
-		return true;
+		return TRUE;
 	}
 
 	/**
@@ -208,21 +210,21 @@ class IpHelper {
 	 * @see  http://plugins.svn.wordpress.org/cloudflare/tags/1.3.9/ip_in_range.php
 	 */
 	function ipv4_in_range($ip, $range) {
-		if (strpos($range, '/') !== false) {
+		if (strpos($range, '/') !== FALSE) {
 			// $range is in IP/NETMASK format
 			list($range, $netmask) = explode('/', $range, 2);
-			if (strpos($netmask, '.') !== false) {
+			if (strpos($netmask, '.') !== FALSE) {
 				// $netmask is a 255.255.0.0 format
 				$netmask = str_replace('*', '0', $netmask);
 				$netmask_dec = ip2long($netmask);
-				return ( (ip2long($ip) & $netmask_dec) == (ip2long($range) & $netmask_dec) );
+				return ((ip2long($ip) & $netmask_dec) == (ip2long($range) & $netmask_dec));
 			} else {
 				// $netmask is a CIDR size block
 				// fix the range argument
 				$x = explode('.', $range);
-				while(count($x)<4) $x[] = '0';
-				list($a,$b,$c,$d) = $x;
-				$range = sprintf("%u.%u.%u.%u", empty($a)?'0':$a, empty($b)?'0':$b,empty($c)?'0':$c,empty($d)?'0':$d);
+				while (count($x) < 4) $x[] = '0';
+				list($a, $b, $c, $d) = $x;
+				$range = sprintf("%u.%u.%u.%u", empty($a) ? '0' : $a, empty($b) ? '0' : $b, empty($c) ? '0' : $c, empty($d) ? '0' : $d);
 				$range_dec = ip2long($range);
 				$ip_dec = ip2long($ip);
 
@@ -230,28 +232,28 @@ class IpHelper {
 				#$netmask_dec = bindec(str_pad('', $netmask, '1') . str_pad('', 32-$netmask, '0'));
 
 				# Strategy 2 - Use math to create it
-				$wildcard_dec = pow(2, (32-$netmask)) - 1;
-				$netmask_dec = ~ $wildcard_dec;
+				$wildcard_dec = pow(2, (32 - $netmask)) - 1;
+				$netmask_dec = ~$wildcard_dec;
 
 				return (($ip_dec & $netmask_dec) == ($range_dec & $netmask_dec));
 			}
 		} else {
 			// range might be 255.255.*.* or 1.2.3.0-1.2.3.255
-			if (strpos($range, '*') !==false) { // a.b.*.* format
+			if (strpos($range, '*') !== FALSE) { // a.b.*.* format
 				// Just convert to A-B format by setting * to 0 for A and 255 for B
 				$lower = str_replace('*', '0', $range);
 				$upper = str_replace('*', '255', $range);
 				$range = "$lower-$upper";
 			}
 
-			if (strpos($range, '-')!==false) { // A-B format
+			if (strpos($range, '-') !== FALSE) { // A-B format
 				list($lower, $upper) = explode('-', $range, 2);
-				$lower_dec = (float)sprintf("%u",ip2long($lower));
-				$upper_dec = (float)sprintf("%u",ip2long($upper));
-				$ip_dec = (float)sprintf("%u",ip2long($ip));
-				return ( ($ip_dec>=$lower_dec) && ($ip_dec<=$upper_dec) );
+				$lower_dec = (float)sprintf("%u", ip2long($lower));
+				$upper_dec = (float)sprintf("%u", ip2long($upper));
+				$ip_dec = (float)sprintf("%u", ip2long($ip));
+				return (($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec));
 			}
-			return false;
+			return FALSE;
 		}
 	}
 
@@ -262,17 +264,17 @@ class IpHelper {
 	 *     CIDR::maskToCIDR('255.255.252.0');
 	 * Result:
 	 *     int(22)
+	 *
 	 * @param $netmask String a 1pv4 formatted ip address.
 	 * @access public
 	 * @static
 	 * @return int CIDR number.
 	 * @see  https://gist.github.com/jonavon/2028872
 	 */
-	public static function maskToCIDR($netmask){
-		if(self::validNetMask($netmask)){
+	public static function maskToCIDR($netmask) {
+		if (self::validNetMask($netmask)) {
 			return self::countSetBits(ip2long($netmask));
-		}
-		else {
+		} else {
 			throw new Exception('Invalid Netmask');
 		}
 	}
@@ -284,15 +286,16 @@ class IpHelper {
 	 *     CIDR::countSetBits(ip2long('255.255.252.0'));
 	 * Result:
 	 *     int(22)
+	 *
 	 * @param $int int a number
 	 * @access public
 	 * @static
-	 * @see http://stackoverflow.com/questions/109023/best-algorithm-to-co\
+	 * @see  http://stackoverflow.com/questions/109023/best-algorithm-to-co\
 	 * unt-the-number-of-set-bits-in-a-32-bit-integer
 	 * @return int number of bits set.
 	 * @see  https://gist.github.com/jonavon/2028872
 	 */
-	public static function countSetbits($int){
+	public static function countSetbits($int) {
 		$int = $int - (($int >> 1) & 0x55555555);
 		$int = ($int & 0x33333333) + (($int >> 2) & 0x33333333);
 		return (($int + ($int >> 4) & 0xF0F0F0F) * 0x1010101) >> 24;
@@ -307,15 +310,16 @@ class IpHelper {
 	 * Result:
 	 *     bool(true)
 	 *     bool(false)
+	 *
 	 * @param $netmask String a 1pv4 formatted ip address.
-	 * @see http://www.actionsnip.com/snippets/tomo_atlacatl/calculate-if-\
+	 * @see  http://www.actionsnip.com/snippets/tomo_atlacatl/calculate-if-\
 	 * a-netmask-is-valid--as2-
 	 * @access public
 	 * @static
 	 * @return bool True if a valid netmask.
 	 * @see  https://gist.github.com/jonavon/2028872
 	 */
-	public static function validNetMask($netmask){
+	public static function validNetMask($netmask) {
 		$netmask = ip2long($netmask);
 		$neg = ((~(int)$netmask) & 0xFFFFFFFF);
 		return (($neg + 1) & $neg) === 0;
@@ -329,6 +333,7 @@ class IpHelper {
 	 *     CIDR::CIDRtoMask(22);
 	 * Result:
 	 *     string(13) "255.255.252.0"
+	 *
 	 * @param $int int Between 0 and 32.
 	 * @access public
 	 * @static
@@ -347,6 +352,7 @@ class IpHelper {
 	 *     CIDR::alignedCIDR('127.0.0.1','255.255.252.0');
 	 * Result:
 	 *     string(12) "127.0.0.0/22"
+	 *
 	 * @param $ipinput String a IPv4 formatted ip address.
 	 * @param $netmask String a 1pv4 formatted ip address.
 	 * @access public
@@ -354,7 +360,7 @@ class IpHelper {
 	 * @return String CIDR block.
 	 * @see  https://gist.github.com/jonavon/2028872
 	 */
-	public static function alignedCIDR($ipinput,$netmask){
+	public static function alignedCIDR($ipinput, $netmask) {
 		$alignedIP = long2ip((ip2long($ipinput)) & (ip2long($netmask)));
 		return "$alignedIP/" . self::maskToCIDR($netmask);
 	}
@@ -368,6 +374,7 @@ class IpHelper {
 	 * Result:
 	 *     bool(true)
 	 *     bool(false)
+	 *
 	 * @param $ipinput String a IPv4 formatted ip address.
 	 * @param $cidr String a IPv4 formatted CIDR block. Block is aligned
 	 * during execution.
@@ -376,10 +383,10 @@ class IpHelper {
 	 * @return String CIDR block.
 	 * @see  https://gist.github.com/jonavon/2028872
 	 */
-	public static function IPisWithinCIDR($ipinput,$cidr){
-		$cidr = explode('/',$cidr);
-		$cidr = self::alignedCIDR($cidr[0],self::CIDRtoMask((int)$cidr[1]));
-		$cidr = explode('/',$cidr);
+	public static function IPisWithinCIDR($ipinput, $cidr) {
+		$cidr = explode('/', $cidr);
+		$cidr = self::alignedCIDR($cidr[0], self::CIDRtoMask((int)$cidr[1]));
+		$cidr = explode('/', $cidr);
 		$ipinput = (ip2long($ipinput));
 		$ip1 = (ip2long($cidr[0]));
 		$ip2 = ($ip1 + pow(2, (32 - (int)$cidr[1])) - 1);
@@ -396,6 +403,7 @@ class IpHelper {
 	 * Result:
 	 *     int(32)
 	 *     int(8)
+	 *
 	 * @param $ipinput String a IPv4 formatted ip address.
 	 * @access public
 	 * @static
@@ -422,19 +430,20 @@ class IpHelper {
 	 *       [5]=> string(13) "127.0.0.32/31"
 	 *       [6]=> string(13) "127.0.0.34/32"
 	 *     }
+	 *
 	 * @param $startIPinput String a IPv4 formatted ip address.
 	 * @param $startIPinput String a IPv4 formatted ip address.
-	 * @see http://null.pp.ru/src/php/Netmask.phps
+	 * @see  http://null.pp.ru/src/php/Netmask.phps
 	 * @return Array CIDR blocks in a numbered array.
 	 * @see  https://gist.github.com/jonavon/2028872
 	 */
-	public static function rangeToCIDRList($startIPinput,$endIPinput=NULL) {
+	public static function rangeToCIDRList($startIPinput, $endIPinput = NULL) {
 		$start = ip2long($startIPinput);
-		$end =(empty($endIPinput))?$start:ip2long($endIPinput);
-		while($end >= $start) {
+		$end = (empty($endIPinput)) ? $start : ip2long($endIPinput);
+		while ($end >= $start) {
 			$maxsize = self::maxBlock(long2ip($start));
-			$maxdiff = 32 - intval(log($end - $start + 1)/log(2));
-			$size = ($maxsize > $maxdiff)?$maxsize:$maxdiff;
+			$maxdiff = 32 - intval(log($end - $start + 1) / log(2));
+			$size = ($maxsize > $maxdiff) ? $maxsize : $maxdiff;
 			$listCIDRs[] = long2ip($start) . "/$size";
 			$start += pow(2, (32 - $size));
 		}
@@ -453,6 +462,7 @@ class IpHelper {
 	 *       [0]=> string(11) "127.0.0.128"
 	 *       [1]=> string(11) "127.0.0.255"
 	 *     }
+	 *
 	 * @param $cidr string CIDR block
 	 * @return Array low end of range then high end of range.
 	 * @see  https://gist.github.com/jonavon/2028872

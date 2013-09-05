@@ -43,7 +43,7 @@ if (is_object($res = $mysqli->query($selectQuery))) {
 			(is_null($result['publicSuffix']) ? NULL : '\'' . mysqli_real_escape_string($mysqli, $result['publicSuffix']) . '\''),
 			$row['host_id']);
 		fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
-		$updateResult= $mysqli->query($updateQuery);
+		$updateResult = $mysqli->query($updateQuery);
 		if (!is_bool($updateResult) || !$updateResult) {
 			fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $mysqli->error, $mysqli->errno));
 			$isSuccessful = FALSE;
@@ -68,4 +68,5 @@ if (is_bool($isSuccessful) && $isSuccessful) {
 function CliErrorHandler($errno, $errstr, $errfile, $errline) {
 	fwrite(STDERR, $errstr . ' in ' . $errfile . ' on ' . $errline . PHP_EOL);
 }
+
 ?>

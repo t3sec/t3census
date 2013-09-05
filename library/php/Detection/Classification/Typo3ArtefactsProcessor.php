@@ -18,7 +18,7 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 	/**
 	 * Class constructor.
 	 *
-	 * @param  \T3census\Detection\ProcessorInterface|null  $successor
+	 * @param  \T3census\Detection\ProcessorInterface|null $successor
 	 */
 	public function __construct($successor = NULL) {
 		if (!is_null($successor)) {
@@ -29,7 +29,7 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 	/**
 	 * Processes context.
 	 *
-	 * @param  \T3census\Detection\Context  $context
+	 * @param  \T3census\Detection\Context $context
 	 * @return  void
 	 */
 	public function process(\T3census\Detection\Context $context) {
@@ -44,12 +44,12 @@ class Typo3ArtefactsProcessor extends \T3census\Detection\AbstractProcessor impl
 		$path = $objUrl->path->getData();
 		$path = array_reverse($path);
 		$pathString = '';
-		$i=0;
+		$i = 0;
 		foreach ($path as $pathSegment) {
 			if (!empty($pathSegment)) {
 				if ($i === 0) {
 					if (!is_int(strpos($pathSegment, '.'))) {
-						$pathString =  $pathString . '/' . $pathSegment;
+						$pathString = $pathString . '/' . $pathSegment;
 					}
 				} else {
 					$pathString = $pathString . '/' . $pathSegment;

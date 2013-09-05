@@ -95,7 +95,8 @@ class ReverseIpLookup {
 	public function setQuery($query) {
 		if (is_string($query)) {
 			$this->query = $query;
-			unset($this->results); $this->results = array();
+			unset($this->results);
+			$this->results = array();
 			$this->isProcessed = FALSE;
 		}
 
@@ -115,7 +116,7 @@ class ReverseIpLookup {
 			$objHttpClient = new UrlFetcher();
 
 			$urls = array();
-			for ($i=0; $i< 100; $i++) {
+			for ($i = 0; $i < 100; $i++) {
 				$url = sprintf('%s?q=%s&first=%u',
 					$this->endpoint,
 					urlencode($this->query),
@@ -181,7 +182,8 @@ class ReverseIpLookup {
 
 	public function reset() {
 		$this->endpoint = $this->query = NULL;
-		unset($this->results); $this->results = array();
+		unset($this->results);
+		$this->results = array();
 		$this->isProcessed = FALSE;
 		$this->offset = 1;
 
@@ -214,11 +216,11 @@ class ReverseIpLookup {
 	}
 
 	protected function getSimplifiedUrl(\Purl\Url $url) {
-		$simplifiedUrl= '';
+		$simplifiedUrl = '';
 
 		$simplifiedUrl .= $url->get('scheme') . '://';
 		$simplifiedUrl .= $url->get('host');
-		$simplifiedUrl .= (!is_null($url->get('port')) ? ':' . $url->get('port') .'/' : '/');
+		$simplifiedUrl .= (!is_null($url->get('port')) ? ':' . $url->get('port') . '/' : '/');
 
 		return $simplifiedUrl;
 	}

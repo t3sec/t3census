@@ -125,7 +125,8 @@ class UrlFetcher {
 		}
 
 		if (is_bool($followRedirects) && $followRedirects
-				&& is_array($curlInfo) && array_key_exists('redirect_count', $curlInfo)) {
+				&& is_array($curlInfo) && array_key_exists('redirect_count', $curlInfo)
+		) {
 			$this->numRedirects = $curlInfo['redirect_count'];
 			$this->url = $curlInfo['url'];
 		}
@@ -225,4 +226,5 @@ class UrlFetcher {
 		return $this;
 	}
 }
+
 ?>

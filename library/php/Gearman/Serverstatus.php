@@ -68,14 +68,14 @@ class Serverstatus {
 		$errorString = '';
 
 		$handle = @fsockopen($this->host, $this->port, $errorNumber, $errorString, 10);
-		if ($handle != NULL){
-			fwrite($handle,"status\n");
+		if ($handle != NULL) {
+			fwrite($handle, "status\n");
 			while (!feof($handle)) {
 				$line = fgets($handle, 4096);
-				if( $line==".\n"){
+				if ($line == ".\n") {
 					break;
 				}
-				if( preg_match("~^(.*)[ \t](\d+)[ \t](\d+)[ \t](\d+)~",$line,$matches) ){
+				if (preg_match("~^(.*)[ \t](\d+)[ \t](\d+)[ \t](\d+)~", $line, $matches)) {
 					$function = $matches[1];
 					$this->status['operations'][$function] = array(
 						'function' => $function,
@@ -85,14 +85,14 @@ class Serverstatus {
 					);
 				}
 			}
-			fwrite($handle,"workers\n");
+			fwrite($handle, "workers\n");
 			while (!feof($handle)) {
 				$line = fgets($handle, 4096);
-				if( $line==".\n"){
+				if ($line == ".\n") {
 					break;
 				}
 				// FD IP-ADDRESS CLIENT-ID : FUNCTION
-				if( preg_match("~^(\d+)[ \t](.*?)[ \t](.*?) : ?(.*)~",$line,$matches) ){
+				if (preg_match("~^(\d+)[ \t](.*?)[ \t](.*?) : ?(.*)~", $line, $matches)) {
 					$fd = $matches[1];
 					$this->status['connections'][$fd] = array(
 						'fd' => $fd,

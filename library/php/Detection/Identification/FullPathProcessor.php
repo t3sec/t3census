@@ -21,7 +21,7 @@ class FullPathProcessor extends \T3census\Detection\AbstractProcessor implements
 	/**
 	 * Class constructor.
 	 *
-	 * @param  \T3census\Detection\ProcessorInterface|null  $successor
+	 * @param  \T3census\Detection\ProcessorInterface|null $successor
 	 * @param  bool $allowRedirect
 	 */
 	public function __construct($successor = NULL, $allowRedirect = FALSE) {
@@ -44,7 +44,7 @@ class FullPathProcessor extends \T3census\Detection\AbstractProcessor implements
 	/**
 	 * Processes context.
 	 *
-	 * @param  \T3census\Detection\Context  $context
+	 * @param  \T3census\Detection\Context $context
 	 * @return  void
 	 */
 	public function process(\T3census\Detection\Context $context) {
@@ -56,7 +56,7 @@ class FullPathProcessor extends \T3census\Detection\AbstractProcessor implements
 
 		$urlFullPath = $objUrl->get('scheme') . '://' . $objUrl->get('host');
 		$path = $objUrl->get('path')->getPath();
-		$urlFullPath .= (is_string($path) && strlen($path) > 0 && 0 !== strcmp('/', $path) ? $path  : '');
+		$urlFullPath .= (is_string($path) && strlen($path) > 0 && 0 !== strcmp('/', $path) ? $path : '');
 
 		$objFetcher->setUrl($urlFullPath)->fetchUrl(\T3census\Url\UrlFetcher::HTTP_GET, TRUE, $this->allowRedirect);
 		$objRequest->setRequestUrl($urlFullPath)->setResponseUrl($urlFullPath);
@@ -65,8 +65,8 @@ class FullPathProcessor extends \T3census\Detection\AbstractProcessor implements
 			$objRequest->setRequestUrl($urlFullPath)->setResponseUrl($urlFullPath);
 			if ($objFetcher->getNumRedirects() >= 0) $objRequest->setResponseUrl($objFetcher->getUrl());
 
-			if (is_null($context->getIp()))  $context->setIp($objFetcher->getIpAddress());
-			if (is_null($context->getPort()))  $context->setPort($objFetcher->getPort());
+			if (is_null($context->getIp())) $context->setIp($objFetcher->getIpAddress());
+			if (is_null($context->getPort())) $context->setPort($objFetcher->getPort());
 
 			$objRequest->setResponseCode($objFetcher->getResponseHttpCode());
 			$responseBody = $objFetcher->getBody();

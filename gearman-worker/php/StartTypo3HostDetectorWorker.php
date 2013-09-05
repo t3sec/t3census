@@ -15,8 +15,7 @@ $fetcher = new Typo3HostDetectorWorker();
 
 $pid = pcntl_fork();
 
-if ($pid == -1)
-{
+if ($pid == -1) {
 	die("could not fork\n");
 } else if ($pid) {
 	// After the bird exit the parent process this closes the console
@@ -26,8 +25,8 @@ if ($pid == -1)
 	// we are the child now operating the fetcher
 	// catch some signals
 	pcntl_signal(SIGTERM, "sig_handler");
-	pcntl_signal(SIGHUP,  "sig_handler");
-	pcntl_signal(SIGINT,  "sig_handler");
+	pcntl_signal(SIGHUP, "sig_handler");
+	pcntl_signal(SIGINT, "sig_handler");
 
 	$fetcher->run();
 }
@@ -37,7 +36,7 @@ if ($pid == -1)
 function sig_handler($signo) {
 	echo "Signal {$signo} received\n";
 	flush();
-	switch($signo) {
+	switch ($signo) {
 		case SIGTERM:
 			exit(0);
 			break;

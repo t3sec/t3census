@@ -150,4 +150,5 @@ class Context {
 		return $this->url;
 	}
 }
+
 ?>

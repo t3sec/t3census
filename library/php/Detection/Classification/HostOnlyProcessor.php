@@ -18,7 +18,7 @@ class HostOnlyProcessor extends \T3census\Detection\AbstractProcessor implements
 	/**
 	 * Class constructor.
 	 *
-	 * @param  \T3census\Detection\ProcessorInterface|null  $successor
+	 * @param  \T3census\Detection\ProcessorInterface|null $successor
 	 */
 	public function __construct($successor = NULL) {
 		if (!is_null($successor)) {
@@ -29,7 +29,7 @@ class HostOnlyProcessor extends \T3census\Detection\AbstractProcessor implements
 	/**
 	 * Processes context.
 	 *
-	 * @param  \T3census\Detection\Context  $context
+	 * @param  \T3census\Detection\Context $context
 	 * @return  void
 	 */
 	public function process(\T3census\Detection\Context $context) {

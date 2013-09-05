@@ -18,7 +18,7 @@ class FullPathProcessor extends \T3census\Detection\AbstractProcessor implements
 	/**
 	 * Class constructor.
 	 *
-	 * @param  \T3census\Detection\ProcessorInterface|null  $successor
+	 * @param  \T3census\Detection\ProcessorInterface|null $successor
 	 */
 	public function __construct($successor = NULL) {
 		if (!is_null($successor)) {
@@ -29,7 +29,7 @@ class FullPathProcessor extends \T3census\Detection\AbstractProcessor implements
 	/**
 	 * Processes context.
 	 *
-	 * @param  \T3census\Detection\Context  $context
+	 * @param  \T3census\Detection\Context $context
 	 * @return  void
 	 */
 	public function process(\T3census\Detection\Context $context) {
@@ -40,7 +40,7 @@ class FullPathProcessor extends \T3census\Detection\AbstractProcessor implements
 
 		$urlFullPath = $objUrl->get('scheme') . '://' . $objUrl->get('host');
 		$path = $objUrl->get('path')->getPath();
-		$urlFullPath .= (is_string($path) && strlen($path) > 0 && 0 !== strcmp('/', $path) ? $path  : '');
+		$urlFullPath .= (is_string($path) && strlen($path) > 0 && 0 !== strcmp('/', $path) ? $path : '');
 		$objFetcher->setUrl($urlFullPath)->fetchUrl(\T3census\Url\UrlFetcher::HTTP_GET, FALSE, TRUE);
 
 		if ($objFetcher->getErrno() === 0) {

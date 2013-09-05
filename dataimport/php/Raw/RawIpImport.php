@@ -25,7 +25,7 @@ $isSuccessful = TRUE;
 if ($fh = fopen(realpath($dir . '/' . $filename), 'r')) {
 	$date = new DateTime();
 
-	while ( !feof($fh) ) {
+	while (!feof($fh)) {
 		$ipAddress = trim(fgets($fh));
 		fwrite(STDOUT, $ipAddress . PHP_EOL);
 
@@ -51,7 +51,6 @@ if (is_bool($isSuccessful) && $isSuccessful) {
 } else {
 	die(1);
 }
-
 
 
 function CliErrorHandler($errno, $errstr, $errfile, $errline) {

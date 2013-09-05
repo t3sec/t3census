@@ -32,7 +32,7 @@ $context->setUrl('http://www.walthelm-gruppe.com/unternehmen/standorte/');
 $context->setUrl('http://www.barsa.by');
 $context->setUrl('http://www.colleen-rae-holmes.com/index.php');
 
-$context->setUrl('http://www.internorm.com/');
+$context->setUrl('http://turdashopping.ro/');
 #$context->setUrl('http://torontonews24.com/');
 #$context->setUrl('http://www.1-von-uns.de/typo3/index.php');
 
@@ -57,13 +57,13 @@ print_r($context);
 
 
 if (TRUE || is_bool($context->getIsTypo3Cms()) && $context->getIsTypo3Cms()) {
-/*
-	$objArtefacts = new \T3census\Detection\Classification\Typo3ArtefactsProcessor();
-	$objFullPath = new \T3census\Detection\Classification\FullPathProcessor($objArtefacts);
-	$objHost = new \T3census\Detection\Classification\HostOnlyProcessor($objFullPath);
-	$objRequest = new \T3census\Detection\Classification\ExistingRequestsProcessor($objHost);
-	$objRequest->process($context);
-*/
+	/*
+		$objArtefacts = new \T3census\Detection\Classification\Typo3ArtefactsProcessor();
+		$objFullPath = new \T3census\Detection\Classification\FullPathProcessor($objArtefacts);
+		$objHost = new \T3census\Detection\Classification\HostOnlyProcessor($objFullPath);
+		$objRequest = new \T3census\Detection\Classification\ExistingRequestsProcessor($objHost);
+		$objRequest->process($context);
+	*/
 	$objFingerprint = new \T3census\Detection\Classification\Typo3FingerprintProcessor();
 	$objFingerprint->process($context);
 	unset($objRequest);
