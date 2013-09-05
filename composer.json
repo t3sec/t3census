@@ -1,6 +1,8 @@
 {
 	"require": {
 		"jwage/purl": "0.0.2",
+		"willdurand/geocoder" : "~2.0",
+		"league/geotools": "~0.3",
 		"themattharris/tmhOAuth": "0.8.1"
 	},
 	"require-dev": {

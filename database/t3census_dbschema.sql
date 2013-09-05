@@ -22,6 +22,8 @@ CREATE TABLE server_port (
 CREATE TABLE server (
 	server_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	server_ip INT UNSIGNED    NOT NULL,
+	latitude  DECIMAL(10,7) NULL,
+	longitude DECIMAL(10,7) NULL,
 	created   DATETIME        NOT NULL,
 	updated   DATETIME,
 	locked    BOOL            NOT NULL DEFAULT 0,
