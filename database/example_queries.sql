@@ -49,3 +49,12 @@ FROM cidr
 WHERE updated IS NULL
 ORDER BY cidr DESC
 LIMIT 1;
+
+
+-- Export TYPO3 servers with geocoding
+SELECT INET_NTOA(s.server_ip) AS server_ip, s.latitude, s.longitude, COUNT(h.host_id) AS numhosts
+FROM server s RIGHT JOIN host h ON (s.server_id = h.fk_server_id)
+WHERE s.latitude IS NOT NULL AND s.longitude IS NOT NULL AND h.typo3_installed=1
+GROUP BY s.server_id
+HAVING numhosts >= 1
+ORDER BY numhosts DESC;
