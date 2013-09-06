@@ -1,8 +1,21 @@
 {
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/novutec/DomainParser.git"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/novutec/WhoisParser.git"
+		}
+	],
 	"require": {
+		"guzzle/guzzle": "~3.7",
 		"jwage/purl": "0.0.2",
 		"willdurand/geocoder" : "~2.0",
 		"league/geotools": "~0.3",
+		"novutec/DomainParser": "dev-master as 2.0.0",
+		"novutec/WhoisParser": "dev-master as 3.1.0",
 		"themattharris/tmhOAuth": "0.8.1"
 	},
 	"require-dev": {
