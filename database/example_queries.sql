@@ -58,3 +58,10 @@ WHERE s.latitude IS NOT NULL AND s.longitude IS NOT NULL AND h.typo3_installed=1
 GROUP BY s.server_id
 HAVING numhosts >= 1
 ORDER BY numhosts DESC;
+
+
+-- Aggregate distinct host names
+INSERT INTO aggregated_host(host_name,host_path,host_domain,host_suffix,typo3_versionstring)
+SELECT DISTINCT CONCAT(host_scheme, '://', IF(host_subdomain IS NULL, '', CONCAT(host_subdomain, '.')), host_domain) AS host_name,host_path,host_domain,host_suffix,typo3_versionstring
+FROM host
+WHERE typo3_installed AND typo3_versionstring IS NOT NULL AND host_suffix IS NOT NULL;

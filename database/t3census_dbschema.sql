@@ -63,15 +63,15 @@ CREATE TABLE host (
 	host_id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	host_scheme         VARCHAR(10)     NULL,
 	host_subdomain      VARCHAR(128)    NULL,
-	host_domain         VARCHAR(255)    NOT NULL,
-	host_suffix         VARCHAR(64)     NULL,
+	host_domain         VARCHAR(128)    NOT NULL,
+	host_suffix         VARCHAR(28)     NULL,
 	host_name           VARCHAR(255)    NULL,
 	host_path           VARCHAR(255)    NULL,
-	typo3_installed     BOOL            NULL,
-	typo3_versionstring VARCHAR(64)     NULL,
+	fk_server_id        BIGINT UNSIGNED NOT NULL,
 	created             DATETIME        NOT NULL,
 	updated             DATETIME,
-	fk_server_id        BIGINT UNSIGNED NOT NULL,
+	typo3_installed     BOOL            NULL,
+	typo3_versionstring VARCHAR(64)     NULL,
 	FOREIGN KEY fk_server_id (fk_server_id)
 	REFERENCES server (server_id)
 		ON DELETE CASCADE
@@ -116,6 +116,22 @@ CREATE TABLE twitter_url (
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
 	PRIMARY KEY (url_id)
+)
+	ENGINE =InnoDB;
+
+CREATE TABLE aggregated_host (
+	host_id             MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
+	host_name           VARCHAR(128) NULL,
+	host_path           VARCHAR(255) NULL,
+	host_domain         VARCHAR(128) NOT NULL,
+	host_suffix         VARCHAR(28) NOT NULL,
+	typo3_versionstring VARCHAR(16) NULL,
+	location            VARCHAR(255) NULL,
+	latitude            DECIMAL(10,7) NULL,
+	longitude           DECIMAL(10,7) NULL,
+	skipped             BOOL NOT NULL DEFAULT 0,
+	PRIMARY KEY (host_id),
+	UNIQUE KEY unique_host (host_name, host_path)
 )
 	ENGINE =InnoDB;
 
