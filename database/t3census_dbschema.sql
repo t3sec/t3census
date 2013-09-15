@@ -119,17 +119,27 @@ CREATE TABLE twitter_url (
 )
 	ENGINE =InnoDB;
 
+CREATE TABLE reg_domain (
+	domain_id           MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
+	domain_name         VARCHAR(128) NOT NULL,
+	domain_suffix       VARCHAR(28) NOT NULL,
+	location            VARCHAR(700) NULL,
+	latitude            DECIMAL(10,7) NULL,
+	longitude           DECIMAL(10,7) NULL,
+	skipped             BOOL NOT NULL DEFAULT 0,
+	processed          BOOL NOT NULL DEFAULT 0,
+	extractedText       TEXT NULL,
+	PRIMARY KEY (domain_id),
+	UNIQUE KEY unique_domain (domain_name)
+)
+	ENGINE =InnoDB;
+
 CREATE TABLE aggregated_host (
 	host_id             MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	host_name           VARCHAR(128) NULL,
 	host_path           VARCHAR(255) NULL,
-	host_domain         VARCHAR(128) NOT NULL,
-	host_suffix         VARCHAR(28) NOT NULL,
 	typo3_versionstring VARCHAR(16) NULL,
-	location            VARCHAR(255) NULL,
-	latitude            DECIMAL(10,7) NULL,
-	longitude           DECIMAL(10,7) NULL,
-	skipped             BOOL NOT NULL DEFAULT 0,
+	sfk_domain_id       MEDIUMINT UNSIGNED NULL,
 	PRIMARY KEY (host_id),
 	UNIQUE KEY unique_host (host_name, host_path)
 )
