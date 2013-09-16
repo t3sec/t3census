@@ -110,7 +110,7 @@ class ReverseIpLookup {
 		return $this->query;
 	}
 
-	public function getResults() {
+	public function getResults($simplify = TRUE) {
 		if (!$this->isProcessed) {
 			libxml_use_internal_errors(TRUE);
 			$objHttpClient = new UrlFetcher();
@@ -158,17 +158,17 @@ class ReverseIpLookup {
 			$lastInsertedUrl = NULL;
 			$mergedUrls = array();
 			foreach ($urls as $url) {
+				if (is_int(strpos($url, 'r.msn.com'))) continue;
+
 				if (is_string($lastInsertedUrl)) {
-					/* @var $currentUrl \Purl\Url */
-					$currentUrl = $this->getSimplifiedUrl(\Purl\Url::parse($url));
+					$currentUrl = (is_bool($simplify) && $simplify ? $this->getSimplifiedUrl(\Purl\Url::parse($url)) : $url);
 
 					if (0 !== strcmp($lastInsertedUrl, $currentUrl)) {
 						$mergedUrls[] = $currentUrl;
 						$lastInsertedUrl = $currentUrl;
 					}
 				} else {
-					/* @var $currentUrl \Purl\Url */
-					$currentUrl = $this->getSimplifiedUrl(\Purl\Url::parse($url));
+					$currentUrl = (is_bool($simplify) && $simplify ? $this->getSimplifiedUrl(\Purl\Url::parse($url)) : $url);
 					$mergedUrls[] = $currentUrl;
 					$lastInsertedUrl = $currentUrl;
 				}
