@@ -65,3 +65,11 @@ INSERT INTO aggregated_host(host_name,host_path,host_domain,host_suffix,typo3_ve
 SELECT DISTINCT CONCAT(host_scheme, '://', IF(host_subdomain IS NULL, '', CONCAT(host_subdomain, '.')), host_domain) AS host_name,host_path,host_domain,host_suffix,typo3_versionstring
 FROM host
 WHERE typo3_installed AND typo3_versionstring IS NOT NULL AND host_suffix IS NOT NULL;
+
+-- Export .de hosts
+SELECT
+CONCAT(IF(host_subdomain IS NULL, '', CONCAT(host_subdomain, '.')), host_domain) AS fqdn,
+CONCAT(host_scheme, '://', IF(host_subdomain IS NULL, '', CONCAT(host_subdomain, '.')), host_domain, IF(host_path IS NULL, '', CONCAT('/', host_path))) AS url,
+typo3_versionstring
+FROM host
+WHERE typo3_installed AND typo3_versionstring IS NOT NULL AND host_suffix LIKE 'de' ORDER BY fqdn;
