@@ -37,6 +37,12 @@ GROUP BY s.server_id
 HAVING num_hosts > 100
 ORDER BY num_hosts DESC;
 
+-- Show sum of TYPO3 hosts for a specific cidr maintainer
+SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM server s
+INNER JOIN cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip)
+LEFT JOIN host h ON (s.server_id = h.fk_server_id)
+LEFT JOIN cidr_maintainer m ON (c.fk_maintainer_id = m.maintainer_id)
+WHERE h.typo3_installed=1 AND m.maintainer_id=XXX;
 
 -- Process CIDR one-by-one starting from smallest subnet (hosts)
 SELECT
