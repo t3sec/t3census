@@ -123,7 +123,7 @@ CREATE TABLE reg_domain (
 	domain_id           MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	domain_name         VARCHAR(128) NOT NULL,
 	domain_suffix       VARCHAR(28) NOT NULL,
-	location            VARCHAR(700) NULL,
+	location            VARCHAR(900) NULL,
 	latitude            DECIMAL(10,7) NULL,
 	longitude           DECIMAL(10,7) NULL,
 	skipped             BOOL NOT NULL DEFAULT 0,
