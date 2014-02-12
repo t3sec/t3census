@@ -2,74 +2,74 @@ mysql> SELECT typo3_versionstring,count(host_id) FROM host WHERE typo3_installed
 +---------------------+----------------+
 | typo3_versionstring | count(host_id) |
 +---------------------+----------------+
-| NULL                |            698 |
-| TYPO3 3.6 CMS       |            133 |
-| TYPO3 3.7 CMS       |            413 |
-| TYPO3 3.8 CMS       |           1086 |
-| TYPO3 4.0 CMS       |           1969 |
-| TYPO3 4.1 CMS       |           5500 |
-| TYPO3 4.2 CMS       |          12001 |
-| TYPO3 4.3 CMS       |           5430 |
-| TYPO3 4.4 CMS       |          10814 |
-| TYPO3 4.5 CMS       |          53173 |
-| TYPO3 4.6 CMS       |           5799 |
-| TYPO3 4.7 CMS       |          12620 |
-| TYPO3 6.0 CMS       |           1729 |
-| TYPO3 6.1 CMS       |           1738 |
-| TYPO3 6.2 CMS       |             43 |
+| NULL                |            779 |
+| TYPO3 3.6 CMS       |            141 |
+| TYPO3 3.7 CMS       |            434 |
+| TYPO3 3.8 CMS       |           1105 |
+| TYPO3 4.0 CMS       |           2052 |
+| TYPO3 4.1 CMS       |           5643 |
+| TYPO3 4.2 CMS       |          12338 |
+| TYPO3 4.3 CMS       |           5577 |
+| TYPO3 4.4 CMS       |          11093 |
+| TYPO3 4.5 CMS       |          55134 |
+| TYPO3 4.6 CMS       |           5947 |
+| TYPO3 4.7 CMS       |          13074 |
+| TYPO3 6.0 CMS       |           1821 |
+| TYPO3 6.1 CMS       |           1889 |
+| TYPO3 6.2 CMS       |             54 |
 +---------------------+----------------+
-15 rows in set (0.77 sec)
+15 rows in set (0.87 sec)
 
 
 mysql> SELECT COUNT(host_id) FROM host WHERE typo3_installed;
 +----------------+
 | COUNT(host_id) |
 +----------------+
-|         113147 |
+|         117081 |
 +----------------+
-1 row in set (0.09 sec)
+1 row in set (0.24 sec)
 
 
 mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host WHERE typo3_installed=1 AND host_suffix IS NOT NULL GROUP BY host_suffix ORDER BY num_hosts DESC;
 +-------------------+-----------+
 | publicSuffix      | num_hosts |
 +-------------------+-----------+
-| de                |     50946 |
-| com               |     14374 |
-| ch                |      6134 |
-| at                |      5747 |
-| eu                |      4256 |
-| nl                |      3596 |
-| dk                |      3212 |
-| org               |      2718 |
-| be                |      2051 |
-| pl                |      2008 |
-| sk                |      1818 |
-| net               |      1808 |
-| fr                |      1781 |
-| se                |      1395 |
-| info              |      1312 |
-| it                |      1185 |
+| de                |     51395 |
+| com               |     14682 |
+| ch                |      7408 |
+| at                |      5808 |
+| eu                |      4689 |
+| nl                |      4191 |
+| dk                |      3643 |
+| org               |      2744 |
+| be                |      2070 |
+| pl                |      2018 |
+| net               |      1846 |
+| sk                |      1820 |
+| fr                |      1785 |
+| se                |      1502 |
+| info              |      1372 |
+| it                |      1191 |
 | no                |       553 |
-| ru                |       460 |
+| ru                |       462 |
 | ac.at             |       459 |
-| in                |       412 |
-| cz                |       407 |
-| es                |       346 |
-| co.uk             |       337 |
-| ca                |       324 |
-| si                |       313 |
-| hu                |       283 |
+| in                |       413 |
+| cz                |       411 |
+| es                |       350 |
+| co.uk             |       338 |
+| ca                |       325 |
+| si                |       316 |
+| hu                |       285 |
 | fi                |       247 |
-| biz               |       212 |
+| biz               |       226 |
 | com.au            |       199 |
+| www.ro            |       175 |
 | edu               |       172 |
-| www.ro            |       170 |
-| gr                |       130 |
-| co.at             |       125 |
+| gr                |       131 |
+| co.at             |       127 |
 | hr                |       118 |
 | ie                |       110 |
-| cc                |       105 |
+| cc                |       107 |
 | qc.ca             |       102 |
 | lu                |        99 |
 | edu.tr            |        80 |
@@ -81,92 +81,91 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | tv                |        67 |
 | com.br            |        66 |
 | us                |        63 |
-| ud.it             |        54 |
-| com.pl            |        54 |
-| edu.pl            |        54 |
+| com.pl            |        57 |
+| nu                |        56 |
 | ee                |        54 |
-| nu                |        54 |
+| edu.pl            |        54 |
+| ag                |        54 |
+| ud.it             |        54 |
 | com.ua            |        52 |
-| ag                |        51 |
 | de.com            |        48 |
-| li                |        46 |
-| org.uk            |        45 |
+| li                |        48 |
 | pt                |        45 |
-| co.jp             |        45 |
 | cl                |        45 |
+| co.jp             |        45 |
+| org.uk            |        45 |
 | gov.rw            |        43 |
-| co.za             |        37 |
 | jp                |        37 |
-| org.au            |        32 |
+| co.za             |        37 |
 | gob.ec            |        32 |
 | org.ua            |        32 |
+| org.au            |        32 |
 | tm.fr             |        30 |
 | gv.at             |        29 |
 | org.pl            |        29 |
 | ac.fj             |        29 |
+| rs                |        28 |
+| ba                |        27 |
 | com.cn            |        27 |
-| ba                |        26 |
 | com.ar            |        26 |
 | or.at             |        25 |
 | bg                |        25 |
-| rs                |        25 |
+| mobi              |        24 |
 | uk.com            |        24 |
 | pu.it             |        23 |
 | gl                |        23 |
-| chambagri.fr      |        22 |
 | asia              |        22 |
 | lt                |        22 |
+| chambagri.fr      |        22 |
+| ua                |        21 |
 | org.nz            |        21 |
-| ua                |        20 |
+| ru.com            |        19 |
 | us.com            |        19 |
 | bz.it             |        19 |
 | kz                |        19 |
 | lviv.ua           |        18 |
-| ru.com            |        18 |
-| mobi              |        18 |
 | com.sg            |        17 |
+| aero              |        16 |
 | ae                |        16 |
-| aero              |        15 |
-| ac.uk             |        14 |
-| com.mx            |        14 |
+| com.mx            |        15 |
 | net.au            |        14 |
 | gov.uk            |        14 |
+| ac.uk             |        14 |
 | edu.co            |        13 |
 | sg                |        13 |
-| tn                |        12 |
-| dz                |        12 |
 | co.kr             |        12 |
 | co.id             |        12 |
-| pn.it             |        12 |
+| dz                |        12 |
 | cn.com            |        12 |
+| pn.it             |        12 |
 | fo                |        12 |
 | gov.tn            |        12 |
 | br.com            |        12 |
+| tn                |        12 |
+| travel            |        11 |
 | com.na            |        11 |
 | com.hr            |        11 |
 | int               |        11 |
-| travel            |        10 |
 | br                |        10 |
 | co                |        10 |
 | gouv.fr           |        10 |
 | com.de            |        10 |
 | com.co            |        10 |
 | sh                |         9 |
+| me                |         9 |
 | am                |         9 |
-| md                |         8 |
-| me                |         8 |
+| eu.com            |         9 |
 | org.tr            |         8 |
 | kr                |         8 |
 | hu.com            |         8 |
-| org.co            |         8 |
 | gov.ua            |         8 |
+| org.co            |         8 |
 | nhs.uk            |         8 |
 | by                |         8 |
 | hk                |         8 |
-| to                |         8 |
 | as                |         8 |
-| eu.com            |         7 |
-| co.il             |         7 |
+| to                |         8 |
+| md                |         8 |
 | rw                |         7 |
 | or.jp             |         7 |
 | mx                |         7 |
@@ -174,39 +173,37 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | com.tw            |         7 |
 | co.hu             |         7 |
 | st                |         7 |
+| co.il             |         7 |
 | ws                |         6 |
-| co.ke             |         6 |
 | coop              |         6 |
 | name              |         6 |
+| co.ke             |         6 |
 | grosseto.it       |         6 |
 | bz                |         6 |
 | cci.fr            |         6 |
 | pro               |         6 |
 | co.in             |         6 |
-| se.com            |         5 |
 | com.ba            |         5 |
+| se.com            |         5 |
 | nat.tn            |         5 |
 | re                |         5 |
 | asso.fr           |         5 |
 | krakow.pl         |         5 |
-| kr.com            |         5 |
 | tn.it             |         5 |
 | tw                |         5 |
 | kiev.ua           |         5 |
 | rn.it             |         5 |
 | if.ua             |         5 |
 | cx                |         5 |
+| kr.com            |         5 |
 | museum            |         5 |
 | gr.com            |         5 |
 | gov.ru            |         5 |
 | fm                |         5 |
 | com.ph            |         5 |
-| is                |         4 |
-| co.th             |         4 |
-| net.ua            |         4 |
-| bc.ca             |         4 |
 | gov               |         4 |
 | com.ec            |         4 |
+| bc.ca             |         4 |
 | cat               |         4 |
 | ra.it             |         4 |
 | ac.in             |         4 |
@@ -221,17 +218,16 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | edu.ua            |         4 |
 | ma                |         4 |
 | net.pl            |         4 |
-| vn                |         3 |
-| org.br            |         3 |
-| sklep.pl          |         3 |
-| radom.pl          |         3 |
+| co.th             |         4 |
+| net.ua            |         4 |
+| is                |         4 |
 | asn.au            |         3 |
 | mi.it             |         3 |
-| vg                |         3 |
 | ac                |         3 |
 | com.pe            |         3 |
 | com.es            |         3 |
 | ac.rw             |         3 |
+| vg                |         3 |
 | waw.pl            |         3 |
 | gob.mx            |         3 |
 | edu.es            |         3 |
@@ -240,10 +236,10 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | org.na            |         3 |
 | co.tz             |         3 |
 | ne.jp             |         3 |
-| com.ru            |         3 |
 | gov.kz            |         3 |
 | biz.pl            |         3 |
 | ms                |         3 |
+| com.ru            |         3 |
 | go.th             |         3 |
 | info.at           |         3 |
 | or.cr             |         3 |
@@ -253,22 +249,17 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | or.kr             |         3 |
 | mine.nu           |         3 |
 | in.ua             |         3 |
-| gov.af            |         2 |
-| info.tr           |         2 |
-| gov.ar            |         2 |
-| rnu.tn            |         2 |
-| roma.it           |         2 |
-| torino.it         |         2 |
-| net.br            |         2 |
-| edu.bo            |         2 |
-| kolobrzeg.pl      |         2 |
-| firenze.it        |         2 |
+| vn                |         3 |
+| org.br            |         3 |
+| sklep.pl          |         3 |
+| radom.pl          |         3 |
 | katowice.pl       |         2 |
 | sa.it             |         2 |
 | pesarourbino.it   |         2 |
 | or.tz             |         2 |
 | ks.ua             |         2 |
 | pruszkow.pl       |         2 |
+| firenze.it        |         2 |
 | prd.fr            |         2 |
 | com.hk            |         2 |
 | pf                |         2 |
@@ -302,19 +293,16 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | org.hn            |         2 |
 | av.tr             |         2 |
 | k12.tr            |         2 |
-| genova.it         |         1 |
-| k12.ny.us         |         1 |
-| org.fj            |         1 |
-| dp.ua             |         1 |
-| go.id             |         1 |
-| ec                |         1 |
-| cr                |         1 |
-| cv                |         1 |
-| com.ro            |         1 |
-| wroc.pl           |         1 |
-| mk                |         1 |
-| info.pl           |         1 |
-| asso.mc           |         1 |
+| gov.af            |         2 |
+| info.tr           |         2 |
+| gov.ar            |         2 |
+| rnu.tn            |         2 |
+| roma.it           |         2 |
+| torino.it         |         2 |
+| net.br            |         2 |
+| edu.bo            |         2 |
+| mk                |         2 |
+| kolobrzeg.pl      |         2 |
 | se.net            |         1 |
 | vu                |         1 |
 | alessandria.it    |         1 |
@@ -332,6 +320,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | bytom.pl          |         1 |
 | sosnowiec.pl      |         1 |
 | bydgoszcz.pl      |         1 |
+| ir                |         1 |
 | salerno.it        |         1 |
 | wa.gov.au         |         1 |
 | com.zm            |         1 |
@@ -348,7 +337,6 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | ug.gov.pl         |         1 |
 | olkusz.pl         |         1 |
 | pila.pl           |         1 |
-| hn                |         1 |
 | bergamo.it        |         1 |
 | za.org            |         1 |
 | net.fj            |         1 |
@@ -364,7 +352,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | turystyka.pl      |         1 |
 | gliwice.pl        |         1 |
 | ug                |         1 |
-| com.kh            |         1 |
+| hn                |         1 |
 | viterbo.it        |         1 |
 | com.dz            |         1 |
 | com.bd            |         1 |
@@ -382,6 +370,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | nf                |         1 |
 | rybnik.pl         |         1 |
 | la                |         1 |
+| com.kh            |         1 |
 | ac.za             |         1 |
 | presse.fr         |         1 |
 | co.bw             |         1 |
@@ -397,7 +386,6 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | kalisz.pl         |         1 |
 | dyndns.info       |         1 |
 | uz                |         1 |
-| bf                |         1 |
 | benevento.it      |         1 |
 | us.org            |         1 |
 | com.fj            |         1 |
@@ -418,6 +406,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | wroclaw.pl        |         1 |
 | elblag.pl         |         1 |
 | tj                |         1 |
+| bf                |         1 |
 | varese.it         |         1 |
 | net.nz            |         1 |
 | org.eg            |         1 |
@@ -435,17 +424,29 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM host 
 | m.se              |         1 |
 | opole.pl          |         1 |
 | gov.gr            |         1 |
+| genova.it         |         1 |
+| k12.ny.us         |         1 |
+| org.fj            |         1 |
+| dp.ua             |         1 |
+| go.id             |         1 |
+| ec                |         1 |
+| cr                |         1 |
+| cv                |         1 |
+| com.ro            |         1 |
+| wroc.pl           |         1 |
+| info.pl           |         1 |
+| asso.mc           |         1 |
 +-------------------+-----------+
-401 rows in set (0.24 sec)
+402 rows in set (0.27 sec)
 
 
 mysql> SELECT COUNT(DISTINCT host_domain) FROM host WHERE typo3_installed;
 +-----------------------------+
 | COUNT(DISTINCT host_domain) |
 +-----------------------------+
-|                       94758 |
+|                       97977 |
 +-----------------------------+
-1 row in set (0.52 sec)
+1 row in set (0.58 sec)
 
 
 mysql> SELECT host_domain,COUNT(host_id) AS num_hosts FROM host WHERE typo3_installed=1 GROUP BY host_domain HAVING num_hosts > 100 ORDER BY num_hosts DESC;
@@ -466,7 +467,7 @@ mysql> SELECT host_domain,COUNT(host_id) AS num_hosts FROM host WHERE typo3_inst
 | king.edu         |       103 |
 | drs.de           |       102 |
 +------------------+-----------+
-13 rows in set (2.33 sec
+13 rows in set (2.35 sec)
 
 
 mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM server s INNER JOIN cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip) LEFT JOIN host h ON (s.server_id = h.fk_server_id) LEFT JOIN cidr_maintainer m ON (c.fk_maintainer_id = m.maintainer_id) WHERE h.typo3_installed=1 AND m.own_infrastructure GROUP BY c.fk_maintainer_id HAVING num_hosts > 100 ORDER BY num_hosts DESC;
@@ -477,17 +478,17 @@ mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM server
 | Leibniz-Rechenzentrum (LRZ), Germany            |       298 |
 | TU Berlin, campus network                       |       245 |
 | DENIC eG, Germany                               |       238 |
-| Danish Network for Research and Education       |       220 |
+| Danish Network for Research and Education       |       223 |
 | Bergische Universitaet Wuppertal                |       182 |
 | Republic of Slovenia - Ministry of Justice      |       182 |
 | Gottfried Wilhelm Leibniz Universitaet Hannover |       180 |
-| Aarhus University, Denmark                      |       165 |
+| Aarhus University, Denmark                      |       168 |
 | Charite - Universitaetsmedizin Berlin           |       165 |
 | Universitaet zu Koeln                           |       159 |
-| Bitly Inc., US                                  |       131 |
 | Universite Laval, Canada                        |       131 |
-| Musterhauskuechen                               |       124 |
+| Bitly Inc., US                                  |       131 |
+| Musterhauskuechen                               |       125 |
 | B&K Verwaltungs GmbH, Germany                   |       107 |
 | King College, Bristol, Tennessee, US            |       104 |
 +-------------------------------------------------+-----------+
-16 rows in set (15.28 sec)
+16 rows in set (12.23 sec)
