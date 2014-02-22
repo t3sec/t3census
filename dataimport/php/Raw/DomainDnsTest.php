@@ -1,6 +1,13 @@
 <?php
 set_error_handler('CliErrorHandler');
 
+
+$dir = dirname(__FILE__);
+$libraryDir = realpath($dir . '/../../../library/php');
+$vendorDir = realpath($dir . '/../../../vendor');
+require_once $vendorDir. '/autoload.php';
+
+
 $filename = 'DomainDnsTest.txt';
 if (!file_exists(realpath(dirname(__FILE__) . '/' . $filename)) || !is_readable(realpath(dirname(__FILE__) . '/' . $filename))) {
 	fwrite(STDERR, sprintf('ERROR: File %s not accessible' . PHP_EOL, $filename));
@@ -17,28 +24,52 @@ if ($fh = fopen(realpath(dirname(__FILE__) . '/' . $filename), 'r')) {
 	}
 
 	$counter = 0;
+	$objResolver = new \Net_DNS2_Resolver(NULL);
 	while (!feof($fh)) {
 		$domain = trim(fgets($fh));
 
 		if (empty($domain))  continue;
 		fwrite(STDOUT, PHP_EOL . ++$counter . ': ' . $domain . PHP_EOL);
 
-		$dnsRecords = dns_get_record($domain);
-		if (count($dnsRecords) === 0)  $dnsRecords = dns_get_record('www.' . $domain);
-		if (count($dnsRecords) === 0)  continue;
+		try {
+			$objResponse = $objResolver->query($domain);
+			$dnsRecords = $objResponse->answer;
 
-		$results = array();
-		foreach ($dnsRecords as $dnsRecord) {
-			if (array_key_exists('ip', $dnsRecord)) {
-				persistServerIp($mysqli, $dnsRecord['ip']);
-			}
-			if (array_key_exists('type', $dnsRecord) && $dnsRecord['type'] === 'A' && array_key_exists('host', $dnsRecord)) {
-				$results[] = 'http://' . $dnsRecord['host'];
-				break;
+			unset($objResponse);
+		} catch(Net_DNS2_Exception $e) {
+			unset($objResponse);
+			if ($e->getCode() !== 2  && $e->getCode() !== 3)  {
+				fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $e->getMessage(), $e->getCode()));
 			}
 		}
 
-		#print_r($results);
+		if (!isset($dnsRecords)) {
+			try {
+				$objResponse = $objResolver->query($domain);
+				$dnsRecords = $objResponse->answer;
+
+				unset($objResponse);
+			} catch(Net_DNS2_Exception $e) {
+				unset($objResponse);
+				if ($e->getCode() !== 2  && $e->getCode() !== 3)  {
+					fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $e->getMessage(), $e->getCode()));
+				}
+			}
+		}
+
+		if (!isset($dnsRecords))  continue;
+
+		$results = array();
+		foreach ($dnsRecords as $dnsRecord) {
+			if (property_exists($dnsRecord, 'address')) {
+				persistServerIp($mysqli, $dnsRecord->address);
+			}
+			if (property_exists($dnsRecord, 'type') && $dnsRecord->type === 'A' && property_exists($dnsRecord, 'name')) {
+				$results[] = 'http://' .$dnsRecord->name;
+				break;
+			}
+		}
+		unset($dnsRecords);
 
 		foreach ($results as $url) {
 			persistHost($mysqli, $url);

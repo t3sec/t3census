@@ -16,6 +16,7 @@
 		"league/geotools": "~0.3",
 		"novutec/DomainParser": "dev-master as 2.0.0",
 		"novutec/WhoisParser": "dev-master as 3.1.0",
+		"pear/net_dns2": "dev-trunk",
 		"themattharris/tmhOAuth": "0.8.1"
 	},
 	"require-dev": {
