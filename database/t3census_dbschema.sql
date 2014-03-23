@@ -2,22 +2,7 @@ CREATE TABLE port (
 	port_id     SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	port_number SMALLINT UNSIGNED NOT NULL,
 	PRIMARY KEY (port_id)
-)
-	ENGINE =InnoDB;
-
-CREATE TABLE server_port (
-	fk_server_id BIGINT UNSIGNED   NOT NULL,
-	fk_port_id   SMALLINT UNSIGNED NOT NULL,
-	FOREIGN KEY fk_server_id (fk_server_id)
-	REFERENCES server (server_id)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE,
-	FOREIGN KEY fk_port_id (fk_port_id)
-	REFERENCES port (port_id)
-		ON DELETE CASCADE
-		ON UPDATE CASCADE
-)
-	ENGINE =InnoDB;
+) ENGINE =InnoDB;
 
 CREATE TABLE server (
 	server_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -29,8 +14,20 @@ CREATE TABLE server (
 	locked    BOOL            NOT NULL DEFAULT 0,
 	PRIMARY KEY (server_id),
 	UNIQUE KEY unique_server_ip (server_ip)
-)
-	ENGINE =InnoDB;
+) ENGINE =InnoDB;
+
+CREATE TABLE server_port (
+	fk_server_id BIGINT UNSIGNED   NOT NULL,
+	fk_port_id   SMALLINT UNSIGNED NOT NULL,
+	FOREIGN KEY fk_server_id (fk_server_id),
+	REFERENCES server (server_id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE,
+	FOREIGN KEY fk_port_id (fk_port_id)
+	REFERENCES port (port_id)
+		ON DELETE CASCADE
+		ON UPDATE CASCADE
+) ENGINE =InnoDB;
 
 CREATE TABLE cidr_maintainer (
 	maintainer_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -40,8 +37,7 @@ CREATE TABLE cidr_maintainer (
 	updated DATETIME,
 	PRIMARY KEY (maintainer_id),
 	UNIQUE KEY unique_maintainer (maintainer_description)
-)
-	ENGINE =InnoDB;
+) ENGINE =InnoDB;
 
 CREATE TABLE cidr (
 	cidr_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -56,8 +52,7 @@ CREATE TABLE cidr (
 		ON UPDATE CASCADE,
 	PRIMARY KEY (cidr_id),
 	UNIQUE KEY unique_cidr (cidr_ip,cidr_mask)
-)
-	ENGINE =InnoDB;
+) ENGINE =InnoDB;
 
 CREATE TABLE host (
 	host_id             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -77,8 +72,7 @@ CREATE TABLE host (
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
 	PRIMARY KEY (host_id)
-)
-	ENGINE =InnoDB;
+) ENGINE =InnoDB;
 
 CREATE TABLE twitter_user (
 	user_id    INT UNSIGNED    NOT NULL AUTO_INCREMENT,
@@ -88,8 +82,7 @@ CREATE TABLE twitter_user (
 	PRIMARY KEY (user_id),
 	UNIQUE KEY unique_user_id (user_name),
 	UNIQUE KEY unique_user_name (twitter_id)
-)
-	ENGINE =InnoDB;
+) ENGINE =InnoDB;
 
 CREATE TABLE twitter_tweet (
 	tweet_id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -104,8 +97,7 @@ CREATE TABLE twitter_tweet (
 		ON UPDATE CASCADE,
 	PRIMARY KEY (tweet_id),
 	UNIQUE KEY unique_tweet_id (fk_user_id, twitter_id)
-)
-	ENGINE =InnoDB;
+) ENGINE =InnoDB;
 
 CREATE TABLE twitter_url (
 	url_id      BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -116,8 +108,7 @@ CREATE TABLE twitter_url (
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
 	PRIMARY KEY (url_id)
-)
-	ENGINE =InnoDB;
+) ENGINE =InnoDB;
 
 CREATE TABLE reg_domain (
 	domain_id           MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -131,8 +122,7 @@ CREATE TABLE reg_domain (
 	extractedText       TEXT NULL,
 	PRIMARY KEY (domain_id),
 	UNIQUE KEY unique_domain (domain_name)
-)
-	ENGINE =InnoDB;
+) ENGINE =InnoDB;
 
 CREATE TABLE aggregated_host (
 	host_id             MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -142,8 +132,7 @@ CREATE TABLE aggregated_host (
 	sfk_domain_id       MEDIUMINT UNSIGNED NULL,
 	PRIMARY KEY (host_id),
 	UNIQUE KEY unique_host (host_name, host_path)
-)
-	ENGINE =InnoDB;
+) ENGINE =InnoDB;
 
 CREATE FUNCTION mask_to_cidr(mask CHAR(15))
 	RETURNS INT(2) DETERMINISTIC RETURN BIT_COUNT(INET_ATON(mask));
