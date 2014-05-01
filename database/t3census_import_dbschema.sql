@@ -3,7 +3,8 @@ CREATE TABLE host (
 	url            VARCHAR(255)    NULL,
 	processed      BOOL NOT NULL DEFAULT 0,
 	PRIMARY KEY (id),
-	UNIQUE KEY unique_host_fqdn (url)
+	UNIQUE KEY unique_host_fqdn (url),
+	INDEX idx_processing (processed)
 ) ENGINE =InnoDB;
 
 CREATE TABLE server (

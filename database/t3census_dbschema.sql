@@ -13,7 +13,8 @@ CREATE TABLE server (
 	updated   DATETIME,
 	locked    BOOL            NOT NULL DEFAULT 0,
 	PRIMARY KEY (server_id),
-	UNIQUE KEY unique_server_ip (server_ip)
+	UNIQUE KEY unique_server_ip (server_ip),
+	INDEX idx_processing (updated,locked)
 ) ENGINE =InnoDB;
 
 CREATE TABLE server_port (
@@ -71,7 +72,10 @@ CREATE TABLE host (
 	REFERENCES server (server_id)
 		ON DELETE CASCADE
 		ON UPDATE CASCADE,
-	PRIMARY KEY (host_id)
+	PRIMARY KEY (host_id),
+	INDEX idx_server_identifier (fk_server_id)
+	INDEX idx_statistic (typo3_installed),
+	INDEX idx_processing (created,host_subdomain,host_domain)
 ) ENGINE =InnoDB;
 
 CREATE TABLE twitter_user (
