@@ -75,7 +75,7 @@ CREATE TABLE host (
 	PRIMARY KEY (host_id),
 	INDEX idx_server_identifier (fk_server_id)
 	INDEX idx_statistic (typo3_installed),
-	INDEX idx_processing (created,host_subdomain,host_domain)
+	INDEX idx_processing (created,host_scheme,host_subdomain,host_domain)
 ) ENGINE =InnoDB;
 
 CREATE TABLE twitter_user (
