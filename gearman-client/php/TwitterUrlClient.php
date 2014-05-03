@@ -40,16 +40,21 @@ $isSuccessful = TRUE;
 
 $client = new GearmanClient();
 $client->addServer($gearmanHost, $gearmanPort);
+$client->setCreatedCallback('reverse_created');
+$client->setDataCallback('reverse_data');
+$client->setStatusCallback('reverse_status');
+$client->setCompleteCallback('reverse_complete');
+$client->setFailCallback('reverse_fail');
 
 $selectQuery = 'SELECT t.tweet_id,t.created,t.tweet_processed,u.url_text '
 			 . 'FROM twitter_tweet t JOIN twitter_url u ON (t.tweet_id = u.fk_tweet_id) '
 			 . 'WHERE NOT t.tweet_processed '
-			 . 'ORDER BY t.created ASC;';
+			 . 'ORDER BY t.created ASC LIMIT 1000;';
 $res = $mysqli->query($selectQuery);
-#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
 if (is_object($res)) {
+	$numRow = 0;
 	while ($row = $res->fetch_assoc()) {
-		echo($row['url_text'] . PHP_EOL);
+		fwrite(STDOUT, sprintf('%u: %s', ++$numRow, $row['url_text']) . PHP_EOL);
 
 		$objUrl = \Purl\Url::parse($row['url_text']);
 		$result = array();
@@ -89,31 +94,14 @@ if (is_object($res)) {
 			}
 		}
 
-		if (method_exists($client, 'doNormal')) {
-			$detectionResult = json_decode($client->doNormal('TYPO3HostDetector', $row['url_text']));
-		} else {
-			$detectionResult = json_decode($client->do('TYPO3HostDetector', $row['url_text']));
-		}
-		#print_r($detectionResult);
 
-		if (is_object($detectionResult)) {
-			if (is_null($detectionResult->port) || is_null($detectionResult->ip)) continue;
+		$client->addTask('TYPO3HostDetector', $row['url_text'], NULL, 'tweet_'. $row['tweet_id']);
+	}
 
-			$portId = getPortId($mysqli, $detectionResult->port);
-
-			$serverId = getServerId($mysqli, $detectionResult->ip);
-
-			persistServerPortMapping($mysqli, $serverId, $portId);
-
-				// persist only TYPO3 sites
-			if (!is_null($detectionResult->TYPO3) && is_bool($detectionResult->TYPO3) && $detectionResult->TYPO3) {
-				persistHost($mysqli, $serverId, $detectionResult);
-			}
-
-			$mysqli->query("UPDATE twitter_tweet SET tweet_processed = 1 WHERE tweet_id = " . intval($row['tweet_id']));
-		} else if (is_bool($detectionResult) && !$detectionResult) {
-			$mysqli->query("UPDATE twitter_tweet SET tweet_processed = 1 WHERE tweet_id = " . intval($row['tweet_id']));
-		}
+	# run the tasks in parallel (assuming multiple workers)
+	if ($isSuccessful && !$client->runTasks()) {
+		fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $client->error(), $client->getErrno()));
+		$isSuccessful = FALSE;
 	}
 
 	$res->close();
@@ -130,6 +118,78 @@ if (is_bool($isSuccessful) && $isSuccessful) {
 	die(1);
 }
 
+function reverse_created($task)
+{
+	#fwrite(STDOUT, "CREATED: " . $task->jobHandle() . ', ' . $task->unique(). ', ' . $task->data() . PHP_EOL);
+}
+
+function reverse_status($task)
+{
+	/*
+		fwrite(STDOUT, "STATUS: " . $task->jobHandle() . " - " . $task->taskNumerator() .
+			"/" . $task->taskDenominator()  . PHP_EOL);
+	*/
+}
+
+function reverse_complete($task)
+{
+	fwrite(STDOUT, 'COMPLETED: ' . $task->jobHandle() . ', ' . $task->unique(). PHP_EOL);
+	#fwrite(STDOUT, 'Detection result: ' . $task->data(). PHP_EOL);
+
+	$detectionResult = json_decode($task->data());
+	if (is_object($detectionResult)) {
+		if (substr($task->unique(), 0, 5) === 'tweet') {
+			$objMysqli = @new mysqli('127.0.0.1', 'X', 'Y', 'Z', 3306);
+			if ($objMysqli->connect_errno) {
+				fwrite(STDERR, sprintf('ERROR: Database-Server: %s (Errno: %u)' . PHP_EOL, $objMysqli->connect_error, $objMysqli->connect_errno));
+				die(1);
+			}
+
+			if (!is_null($detectionResult->port) && !is_null($detectionResult->ip)) {
+					// persist only TYPO3 sites
+				if (!is_null($detectionResult->TYPO3) && is_bool($detectionResult->TYPO3) && $detectionResult->TYPO3) {
+
+					$portId = getPortId($objMysqli, $detectionResult->port);
+
+					$serverId = getServerId($objMysqli, $detectionResult->ip);
+
+					persistServerPortMapping($objMysqli, $serverId, $portId);
+
+					$portId = getPortId($objMysqli, $detectionResult->port);
+					$serverId = getServerId($objMysqli, $detectionResult->ip);
+					persistServerPortMapping($objMysqli, $serverId, $portId);
+					persistHost($objMysqli, $serverId, $detectionResult);
+				}
+			}
+
+
+			$updateQuery = sprintf('UPDATE twitter_tweet SET tweet_processed = 1 WHERE tweet_id=%u;',
+				substr($task->unique(), 6)
+			);
+			$updateResult = $objMysqli->query($updateQuery);
+			#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
+			if (!is_bool($updateResult) || !$updateResult) {
+				fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $objMysqli->error, $objMysqli->errno));
+				$isSuccessful = FALSE;
+				die(1);
+			}
+
+			mysqli_close($objMysqli);
+		}
+	}
+}
+
+function reverse_fail($task)
+{
+	#echo "FAILED: " . $task->jobHandle() . "\n";
+	fwrite(STDERR, "FAILED: " . $task->jobHandle() . PHP_EOL);
+}
+
+function reverse_data($task)
+{
+	#echo "DATA: " . $task->data() . "\n";
+	fwrite(STDOUT, "DATA: " . $task->data() . PHP_EOL);
+}
 
 function isShortenerServiceHost($host) {
 	$shortenerServices = array(
