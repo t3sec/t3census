@@ -1,120 +1,191 @@
 <?php
+set_error_handler('CliErrorHandler');
 
 $dir = dirname(__FILE__);
 $libraryDir = realpath($dir . '/../../library/php');
 $vendorDir = realpath($dir . '/../../vendor');
 
+require_once $libraryDir . '/Gearman/Serverstatus.php';
 require_once $vendorDir . '/autoload.php';
 
 
 $gearmanHost = '127.0.0.1';
-$gearmanStatus = getGearmanServerStatus($gearmanHost);
+$gearmanPort = 4730;
+$gearmanFunction = 'TYPO3HostDetector';
+try {
+	$gearmanStatus = new T3census\Gearman\Serverstatus();
+	$gearmanStatus->setHost($gearmanHost)->setPort($gearmanPort);
+	$gearmanStatus->poll();
 
-# available
-if (is_array($gearmanStatus)) {
+	if (!$gearmanStatus->hasFunction($gearmanFunction)) {
+		fwrite(STDERR, sprintf('ERROR: Job-Server: Requested function %s not available (Errno: %u)' . PHP_EOL, $gearmanFunction, 1373751780));
+		die(1);
+	}
+	if (!$gearmanStatus->getNumberOfWorkersByFunction($gearmanFunction) > 0) {
+		fwrite(STDERR, sprintf('ERROR: Job-Server: No workers for function %s available (Errno: %u)' . PHP_EOL, $gearmanFunction, 1373751783));
+		die(1);
+	}
+} catch (GearmanException $e) {
+	fwrite(STDERR, sprintf('ERROR: Job-Server: %s (Errno: %u)' . PHP_EOL, $e->getMessage(), $e->getCode()));
+	die(1);
+}
+unset($gearmanStatus);
+$isSuccessful = TRUE;
 
-	// construct a client object
-	$client = new GearmanClient();
-	// add the default server
-	$client->addServer($gearmanHost, 4730);
+// construct a client object
+$client = new GearmanClient();
+// add the default server
+$client->addServer($gearmanHost, $gearmanPort);
+$client->setCreatedCallback('reverse_created');
+$client->setCompleteCallback('reverse_complete');
 
-	$mysqli = new mysqli('127.0.0.1', '', '', '', 3306);
+$mysqli = new mysqli('127.0.0.1', 'X', 'Y', 'Z', 3306);
 
-	$query = 'SELECT s.server_id,INET_NTOA(s.server_ip) AS server_ip,count(h.host_id) AS typo3hosts'
-			. ' FROM server s RIGHT JOIN host h ON (s.server_id = h.fk_server_id)'
-			. ' WHERE s.updated IS NULL AND h.typo3_installed=1'
-			. ' GROUP BY s.server_id'
-			. ' HAVING typo3hosts >= 1'
-			. ' ORDER BY typo3hosts DESC LIMIT 10000;';
-	$query = 'SELECT updated,server_id,INET_NTOA(server_ip) AS server_ip FROM server WHERE NOT locked AND updated IS NULL ORDER BY RAND() LIMIT 10000;';
-	#echo($query . PHP_EOL);
+$query = 'SELECT s.server_id,INET_NTOA(s.server_ip) AS server_ip,count(h.host_id) AS typo3hosts'
+		. ' FROM server s RIGHT JOIN host h ON (s.server_id = h.fk_server_id)'
+		. ' WHERE s.updated IS NULL AND h.typo3_installed=1'
+		. ' GROUP BY s.server_id'
+		. ' HAVING typo3hosts >= 1'
+		. ' ORDER BY typo3hosts DESC LIMIT 100;';
+$query = 'SELECT updated,server_id,INET_NTOA(server_ip) AS server_ip FROM server WHERE NOT locked AND updated IS NULL ORDER BY RAND() LIMIT 100;';
 
-	if ($res = $mysqli->query($query)) {
+if ($res = $mysqli->query($query)) {
 
-		$date = new DateTime();
+	$date = new DateTime();
 
-		while ($row = $res->fetch_assoc()) {
-			if (isServerLocked($mysqli, intval($row['server_id'])) || isServerUpdated($mysqli, intval($row['server_id']))) {
-				continue;
-			} else {
-				$updateQuery = sprintf('UPDATE server SET locked=1 WHERE server_id=%u;',
-					intval($row['server_id'])
-				);
-				$updateResult = $mysqli->query($updateQuery);
-				#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
-				if (!is_bool($updateResult) || !$updateResult) {
-					fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $mysqli->error, $mysqli->errno));
-					$isSuccessful = FALSE;
-					break;
-				}
-
-				$urls = array();
-
-				echo(PHP_EOL . $row['server_id'] . ' ' . $row['server_ip']);
-				if (method_exists($client, 'doNormal')) {
-					$urls = json_decode($client->doNormal('ReverseIpLookup', $row['server_ip']));
-				} else {
-					$urls = json_decode($client->do('ReverseIpLookup', $row['server_ip']));
-				}
-				print_r($urls);
-
-
-				foreach ($urls as $url) {
-					if (method_exists($client, 'doNormal')) {
-						$detectionResult = json_decode($client->doNormal('TYPO3HostDetector', $url));
-					} else {
-						$detectionResult = json_decode($client->do('TYPO3HostDetector', $url));
-					}
-#var_dump($detectionResult);
-
-					if (is_object($detectionResult)) {
-						if (is_null($detectionResult->port) || is_null($detectionResult->ip)) continue;
-						if (empty($detectionResult->TYPO3)) continue;
-
-						$portId = getPortId($mysqli, $detectionResult->port);
-
-						$serverId = getServerId($mysqli, $detectionResult->ip);
-
-						persistServerPortMapping($mysqli, $serverId, $portId);
-
-						$selectQuery = sprintf('SELECT 1 FROM host '
-							. 'WHERE created IS NOT NULL AND host_subdomain LIKE %s AND host_domain LIKE \'%s\' '
-							. 'LIMIT 1',
-							(is_null($detectionResult->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->subdomain) . '\''),
-							$detectionResult->registerableDomain
-						);
-						$selectRes = $mysqli->query($selectQuery);
-						#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
-
-						if (is_object($selectRes)) {
-							if ($selectRes->num_rows == 0) {
-								echo('persist host ' . (is_null($detectionResult->subdomain) ? '' : $detectionResult->subdomain . '.') . $detectionResult->registerableDomain . PHP_EOL);
-								persistHost($mysqli, $serverId, $detectionResult);
-							}
-							$selectRes->close();
-						}
-					}
-				}
-
-				$updateQuery = sprintf('UPDATE server SET locked=0,updated=\'%s\'  WHERE server_id=%u;',
-					$date->format('Y-m-d H:i:s'),
-					intval($row['server_id'])
-				);
-				$updateResult = $mysqli->query($updateQuery);
-				#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
-				if (!is_bool($updateResult) || !$updateResult) {
-					fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $mysqli->error, $mysqli->errno));
-					$isSuccessful = FALSE;
-					break;
-				}
+	$numRow = 0;
+	while ($row = $res->fetch_assoc()) {
+		if (isServerLocked($mysqli, intval($row['server_id'])) || isServerUpdated($mysqli, intval($row['server_id']))) {
+			continue;
+		} else {
+			$updateQuery = sprintf('UPDATE server SET locked=1 WHERE server_id=%u;',
+				intval($row['server_id'])
+			);
+			$updateResult = $mysqli->query($updateQuery);
+			#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
+			if (!is_bool($updateResult) || !$updateResult) {
+				fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $mysqli->error, $mysqli->errno));
+				$isSuccessful = FALSE;
+				break;
 			}
+
+			$urls = array();
+
+			fwrite(STDOUT, sprintf('%u: ServerId: %u - Server IP: %s', ++$numRow, $row['server_id'], $row['server_ip']) . PHP_EOL);
+
+			$client->addTask('ReverseIpLookup', $row['server_ip'], NULL, 'server_'. $row['server_id']);
 		}
 	}
 
-	mysqli_close($mysqli);
-	echo(PHP_EOL);
+	# run the tasks in parallel (assuming multiple workers)
+	if ($isSuccessful && !$client->runTasks()) {
+		fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $client->error(), $client->getErrno()));
+		$isSuccessful = FALSE;
+	}
 }
 
+mysqli_close($mysqli);
+echo(PHP_EOL);
+
+
+
+function reverse_created($task) {
+	#fwrite(STDOUT, "CREATED: " . $task->jobHandle() . ', ' . $task->unique(). PHP_EOL);
+}
+
+
+function reverse_complete($task) {
+	#fwrite(STDOUT, 'COMPLETED: ' . $task->jobHandle() . ', ' . $task->unique(). PHP_EOL);
+
+	$urls = json_decode($task->data());
+
+	if (is_array($urls)) {
+		$date = new DateTime();
+
+		$objMysqli = @new mysqli('127.0.0.1', 'X', 'Y', 'Z', 3306);
+		if ($objMysqli->connect_errno) {
+			fwrite(STDERR, sprintf('ERROR: Database-Server: %s (Errno: %u)' . PHP_EOL, $objMysqli->connect_error, $objMysqli->connect_errno));
+			die(1);
+		}
+
+		if (count($urls)) {
+			fwrite(STDOUT, 'COMPLETED: ' . $task->jobHandle() . ', ' . $task->unique(). ', ' . $task->data() . PHP_EOL);
+			$gearmanHost = '93.180.156.236';
+			$gearmanPort = 4730;
+
+			// construct a client object
+			$client = new GearmanClient();
+			// add the default server
+			$client->addServer($gearmanHost, $gearmanPort);
+			$client->setCreatedCallback('detection_created');
+			$client->setCompleteCallback('detection_complete');
+
+
+			foreach ($urls as $url) {
+				$client->addTask('TYPO3HostDetector', $url);
+			}
+
+			# run the tasks in parallel (assuming multiple workers)
+			if (!$client->runTasks()) {
+				fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $client->error(), $client->getErrno()));
+				die(1);
+			}
+		}
+
+		$updateQuery = sprintf('UPDATE server SET locked=0,updated=\'%s\' WHERE server_id=%u;',
+			$date->format('Y-m-d H:i:s'),
+			intval(substr($task->unique(), 7))
+		);
+		$updateResult = $objMysqli->query($updateQuery);
+		#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
+		if (!is_bool($updateResult) || !$updateResult) {
+			fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $objMysqli->error, $objMysqli->errno));
+			$isSuccessful = FALSE;
+			break;
+		}
+
+		mysqli_close($objMysqli);
+	}
+}
+
+function detection_created($task) {
+	fwrite(STDOUT, "CREATED detection: " . $task->jobHandle() . ', ' . $task->unique(). PHP_EOL);
+}
+
+
+function detection_complete($task) {
+	#fwrite(STDOUT, 'COMPLETED detection: ' . $task->jobHandle() . ', ' . $task->unique(). ', ' . $task->data() . PHP_EOL);
+	fwrite(STDOUT, 'COMPLETED detection: ' . $task->jobHandle() . ', ' . $task->unique() . PHP_EOL);
+
+	$detectionResult = json_decode($task->data());
+
+	if (is_object($detectionResult)) {
+		$objMysqli = @new mysqli('127.0.0.1', 'X', 'Y', 'Z', 3306);
+		if ($objMysqli->connect_errno) {
+			fwrite(STDERR, sprintf('ERROR: Database-Server: %s (Errno: %u)' . PHP_EOL, $objMysqli->connect_error, $objMysqli->connect_errno));
+			die(1);
+		}
+
+		if (!is_null($detectionResult->port) && !is_null($detectionResult->ip)) {
+			// persist only TYPO3 sites
+			#if (!is_null($detectionResult->TYPO3) && is_bool($detectionResult->TYPO3) && $detectionResult->TYPO3) {
+
+				$portId = getPortId($objMysqli, $detectionResult->port);
+
+				$serverId = getServerId($objMysqli, $detectionResult->ip);
+
+				persistServerPortMapping($objMysqli, $serverId, $portId);
+
+				$portId = getPortId($objMysqli, $detectionResult->port);
+				$serverId = getServerId($objMysqli, $detectionResult->ip);
+				persistServerPortMapping($objMysqli, $serverId, $portId);
+				persistHost($objMysqli, $serverId, $detectionResult);
+			#}
+		}
+
+		mysqli_close($objMysqli);
+	}
+}
 
 function isServerLocked($objMysql, $serverId) {
 	$isLocked = TRUE;
@@ -140,7 +211,7 @@ function isServerUpdated($objMysql, $serverId) {
 		$serverId
 	);
 	$res = $objMysql->query($selectQuery);
-	fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
+	#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
 
 	if (is_object($res = $objMysql->query($selectQuery))) {
 
@@ -166,51 +237,6 @@ function extractUrlsFrom($results) {
 	}
 
 	return $urls;
-}
-
-
-function getGearmanServerStatus($host = '127.0.0.1', $port = 4730) {
-	$status = NULL;
-
-	$handle = fsockopen($host, $port, $errorNumber, $errorString, 30);
-	if ($handle != NULL) {
-		fwrite($handle, "status\n");
-		while (!feof($handle)) {
-			$line = fgets($handle, 4096);
-			if ($line == ".\n") {
-				break;
-			}
-			if (preg_match("~^(.*)[ \t](\d+)[ \t](\d+)[ \t](\d+)~", $line, $matches)) {
-				$function = $matches[1];
-				$status['operations'][$function] = array(
-					'function' => $function,
-					'total' => $matches[2],
-					'running' => $matches[3],
-					'connectedWorkers' => $matches[4],
-				);
-			}
-		}
-		fwrite($handle, "workers\n");
-		while (!feof($handle)) {
-			$line = fgets($handle, 4096);
-			if ($line == ".\n") {
-				break;
-			}
-			// FD IP-ADDRESS CLIENT-ID : FUNCTION
-			if (preg_match("~^(\d+)[ \t](.*?)[ \t](.*?) : ?(.*)~", $line, $matches)) {
-				$fd = $matches[1];
-				$status['connections'][$fd] = array(
-					'fd' => $fd,
-					'ip' => $matches[2],
-					'id' => $matches[3],
-					'function' => $matches[4],
-				);
-			}
-		}
-		fclose($handle);
-	}
-
-	return $status;
 }
 
 function getServerId($mysqli, $server) {
@@ -276,7 +302,7 @@ function persistHost($objMysql, $serverId, $host) {
 		(is_null($host->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($objMysql, $host->subdomain) . '\''),
 		$host->registerableDomain
 	);
-	fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
+	#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $selectQuery));
 	$selectRes = $objMysql->query($selectQuery);
 
 	if (is_object($selectRes)) {
@@ -319,3 +345,9 @@ function persistHost($objMysql, $serverId, $host) {
 		$selectRes->close();
 	}
 }
+
+function CliErrorHandler($errno, $errstr, $errfile, $errline) {
+	fwrite(STDERR, $errstr . ' in ' . $errfile . ' on ' . $errline . PHP_EOL);
+}
+
+?>
