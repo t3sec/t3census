@@ -1,64 +1,64 @@
-mysql> SELECT typo3_versionstring,count(host_id) FROM host WHERE typo3_installed = 1 GROUP BY typo3_versionstring;
+mysql> SELECT typo3_versionstring,count(host_id) FROM t3census_db.host WHERE typo3_installed = 1 GROUP BY typo3_versionstring;
 +---------------------+----------------+
 | typo3_versionstring | count(host_id) |
 +---------------------+----------------+
-| TYPO3 3.6 CMS       |            449 |
-| TYPO3 3.7 CMS       |           1566 |
-| TYPO3 3.8 CMS       |           2675 |
-| TYPO3 4.0 CMS       |           4813 |
-| TYPO3 4.1 CMS       |          11697 |
-| TYPO3 4.2 CMS       |          25517 |
-| TYPO3 4.3 CMS       |          11138 |
-| TYPO3 4.4 CMS       |          22777 |
-| TYPO3 4.5 CMS       |         138262 |
-| TYPO3 4.6 CMS       |          11922 |
-| TYPO3 4.7 CMS       |          40078 |
-| TYPO3 6.0 CMS       |           5514 |
-| TYPO3 6.1 CMS       |          16173 |
-| TYPO3 6.2 CMS       |          14794 |
+| TYPO3 3.6 CMS       |            490 |
+| TYPO3 3.7 CMS       |           1713 |
+| TYPO3 3.8 CMS       |           2826 |
+| TYPO3 4.0 CMS       |           5155 |
+| TYPO3 4.1 CMS       |          12492 |
+| TYPO3 4.2 CMS       |          27254 |
+| TYPO3 4.3 CMS       |          11853 |
+| TYPO3 4.4 CMS       |          24355 |
+| TYPO3 4.5 CMS       |         148015 |
+| TYPO3 4.6 CMS       |          12680 |
+| TYPO3 4.7 CMS       |          43283 |
+| TYPO3 6.0 CMS       |           5930 |
+| TYPO3 6.1 CMS       |          17907 |
+| TYPO3 6.2 CMS       |          16590 |
 +---------------------+----------------+
-14 rows in set (0.90 sec)
+14 rows in set (4.70 sec)
 
 
-mysql> SELECT COUNT(host_id) FROM host WHERE typo3_installed;
+mysql> SELECT COUNT(host_id) FROM t3census_db.host WHERE typo3_installed;
 +----------------+
 | COUNT(host_id) |
 +----------------+
-|         314754 |
+|         338788 |
 +----------------+
-1 row in set (0.96 sec)
+1 row in set (3.88 sec)
 
 
-mysql> SELECT COUNT(DISTINCT host_domain) FROM host WHERE typo3_installed;
+mysql> SELECT COUNT(DISTINCT host_domain) FROM t3census_db.host WHERE typo3_installed;
 +-----------------------------+
 | COUNT(DISTINCT host_domain) |
 +-----------------------------+
-|                      261185 |
+|                      281327 |
 +-----------------------------+
-1 row in set (2.29 sec)
+1 row in set (4.94 sec)
 
 
 mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.host WHERE typo3_installed=1 AND host_suffix IS NOT NULL GROUP BY host_suffix ORDER BY num_hosts DESC;
 +-------------------+-----------+
 | publicSuffix      | num_hosts |
 +-------------------+-----------+
-| de                |    200595 |
-| ch                |     31458 |
-| com               |     17506 |
+| de                |    222942 |
+| ch                |     31460 |
+| com               |     17571 |
+| info              |      8408 |
 | dk                |      7657 |
-| info              |      7516 |
-| at                |      6530 |
-| nl                |      6121 |
-| eu                |      5985 |
-| biz               |      4865 |
-| org               |      3111 |
-| net               |      2250 |
+| at                |      6539 |
+| nl                |      6122 |
+| eu                |      5996 |
+| biz               |      5444 |
+| org               |      3116 |
+| net               |      2257 |
 | be                |      2092 |
-| pl                |      2041 |
+| pl                |      2042 |
 | fr                |      1859 |
 | sk                |      1826 |
 | se                |      1602 |
-| us                |      1374 |
+| us                |      1476 |
 | it                |      1228 |
 | no                |       554 |
 | ru                |       481 |
@@ -66,13 +66,13 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | cz                |       429 |
 | in                |       416 |
 | es                |       372 |
-| co.uk             |       364 |
+| co.uk             |       365 |
 | ca                |       335 |
 | si                |       321 |
 | hu                |       297 |
 | fi                |       249 |
 | com.au            |       208 |
-| www.ro            |       181 |
+| www.ro            |       182 |
 | edu               |       177 |
 | co.at             |       135 |
 | gr                |       133 |
@@ -110,9 +110,10 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | rs                |        32 |
 | org.au            |        32 |
 | gob.ec            |        32 |
+| mobi              |        32 |
 | uk.com            |        30 |
 | tm.fr             |        30 |
-| mobi              |        30 |
+| com.cn            |        29 |
 | org.pl            |        29 |
 | ac.fj             |        29 |
 | bg                |        28 |
@@ -120,7 +121,6 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | gl                |        28 |
 | ba                |        27 |
 | us.com            |        27 |
-| com.cn            |        27 |
 | com.ar            |        26 |
 | lt                |        23 |
 | pu.it             |        23 |
@@ -171,6 +171,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | st                |         8 |
 | as                |         8 |
 | md                |         8 |
+| ws                |         8 |
 | rw                |         8 |
 | org.tr            |         8 |
 | kr                |         8 |
@@ -184,7 +185,6 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | co.hu             |         7 |
 | co.in             |         7 |
 | co.il             |         7 |
-| ws                |         7 |
 | or.jp             |         7 |
 | com.my            |         7 |
 | bz                |         7 |
@@ -267,6 +267,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | biz.pl            |         3 |
 | govt.nz           |         2 |
 | my                |         2 |
+| al                |         2 |
 | ac.cr             |         2 |
 | ph                |         2 |
 | co.ug             |         2 |
@@ -304,6 +305,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | no.com            |         2 |
 | ts.it             |         2 |
 | nieruchomosci.pl  |         2 |
+| hn                |         2 |
 | tt                |         2 |
 | tm.se             |         2 |
 | gov.it            |         2 |
@@ -335,7 +337,6 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | pi.it             |         1 |
 | rimini.it         |         1 |
 | org.cn            |         1 |
-| al                |         1 |
 | lutsk.ua          |         1 |
 | pordenone.it      |         1 |
 | im.it             |         1 |
@@ -409,7 +410,6 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | mb.ca             |         1 |
 | cd                |         1 |
 | ug                |         1 |
-| hn                |         1 |
 | bergamo.it        |         1 |
 | za.org            |         1 |
 | net.fj            |         1 |
@@ -455,41 +455,43 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | kalisz.pl         |         1 |
 | dyndns.info       |         1 |
 | ac.tz             |         1 |
+| berlin            |         1 |
 +-------------------+-----------+
-413 rows in set (1.65 sec)
+414 rows in set (4.14 sec)
 
 
 mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM t3census_db.server s INNER JOIN t3census_db.cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip) LEFT JOIN t3census_db.host h ON (s.server_id = h.fk_server_id) LEFT JOIN t3census_db.cidr_maintainer m ON (c.fk_maintainer_id = m.maintainer_id) WHERE h.typo3_installed=1 AND m.own_infrastructure GROUP BY c.fk_maintainer_id HAVING num_hosts > 100 ORDER BY num_hosts DESC;
 +-----------------------------------------------------------------------+-----------+
 | maintainer_description                                                | num_hosts |
 +-----------------------------------------------------------------------+-----------+
-| DENIC eG, Germany                                                     |       529 |
-| B&K Verwaltungs GmbH, Germany                                         |       502 |
+| Corporation Service Company (CSC), Wilmington, Delaware, US           |       885 |
+| DENIC eG, Germany                                                     |       591 |
+| B&K Verwaltungs GmbH, Germany                                         |       532 |
 | Vienna University Computer Center                                     |       417 |
-| m2p entertainment GmbH, Bochum, DE                                    |       329 |
-| RAe Boelsen, Jumpertz, Brochhaus & Kollegen, Koeln, Germany           |       321 |
-| Musterhauskuechen                                                     |       318 |
-| Leibniz-Rechenzentrum (LRZ), Germany                                  |       316 |
-| TU Berlin, campus network                                             |       286 |
-| Hypoport AG, Berlin, DE                                               |       267 |
+| Studienkreis GmbH, Gießen, DE                                         |       388 |
+| Musterhauskuechen                                                     |       333 |
+| RAe Boelsen, Jumpertz, Brochhaus & Kollegen, Koeln, Germany           |       330 |
+| m2p entertainment GmbH, Bochum, DE                                    |       330 |
+| Leibniz-Rechenzentrum (LRZ), Germany                                  |       324 |
+| TU Berlin, campus network                                             |       287 |
+| Hypoport AG, Berlin, DE                                               |       285 |
 | Danish Network for Research and Education                             |       261 |
-| Evangelische Landeskirche in Wuerttemberg, Germany                    |       219 |
+| Evangelische Landeskirche in Wuerttemberg, Germany                    |       236 |
 | Aarhus University, Denmark                                            |       199 |
+| Gottfried Wilhelm Leibniz Universitaet Hannover                       |       192 |
 | Mjam GmbH, Wien, AT                                                   |       191 |
-| Gottfried Wilhelm Leibniz Universitaet Hannover                       |       190 |
 | Bergische Universitaet Wuppertal                                      |       185 |
 | Republic of Slovenia - Ministry of Justice                            |       182 |
-| Charite - Universitaetsmedizin Berlin                                 |       177 |
+| Charite - Universitaetsmedizin Berlin                                 |       178 |
+| VNR Verlag für die Deutsche Wirtschaft AG, Bonn, DE                   |       169 |
 | WIR Bank Genossenschaft, Basel, CH                                    |       166 |
 | Universitaet zu Koeln                                                 |       161 |
-| Ostfalia Hochschule für angewandte Wissenschaften, Wolfenbüttel, DE   |       155 |
-| VNR Verlag für die Deutsche Wirtschaft AG, Bonn, DE                   |       150 |
-| Feriendialyse Dr. Berger und Partner GbR, Wetzlar, DE                 |       147 |
-| Studienkreis GmbH, Gießen, DE                                         |       147 |
-| Verlagsgesellschaft Madsack GmbH & Co., Hannover, DE                  |       142 |
+| Ostfalia Hochschule für angewandte Wissenschaften, Wolfenbüttel, DE   |       156 |
+| Feriendialyse Dr. Berger und Partner GbR, Wetzlar, DE                 |       153 |
+| Verlagsgesellschaft Madsack GmbH & Co., Hannover, DE                  |       153 |
 | Bitly Inc., US                                                        |       132 |
 | Universite Laval, Canada                                              |       131 |
-| ACS Automotive Communication Services GmbH, Isernhagen, DE            |       119 |
+| ACS Automotive Communication Services GmbH, Isernhagen, DE            |       123 |
 | King College, Bristol, Tennessee, US                                  |       104 |
 +-----------------------------------------------------------------------+-----------+
-28 rows in set (27.24 sec)
+29 rows in set (28.97 sec)
