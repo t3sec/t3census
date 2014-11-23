@@ -7,7 +7,7 @@ require_once $libraryDir . '/Detection/Context.php';
 require_once $libraryDir . '/Detection/Request.php';
 require_once $libraryDir . '/Detection/Identification/HostOnlyProcessor.php';
 require_once $libraryDir . '/Detection/Identification/FullPathProcessor.php';
-require_once $libraryDir . '/Detection/Identification/ShortenerRedirectOnlyProcessor.php';
+require_once $libraryDir . '/Detection/Normalization/ShortenerRedirectOnlyProcessor.php';
 require_once $libraryDir . '/Detection/Identification/Typo3ArtefactsProcessor.php';
 require_once $libraryDir . '/Detection/Classification/ExistingRequestsProcessor.php';
 require_once $libraryDir . '/Detection/Classification/HostOnlyProcessor.php';
@@ -44,10 +44,6 @@ $objHostRedirect = new \T3census\Detection\Identification\HostOnlyProcessor($obj
 $objHostNoRedirect = new \T3census\Detection\Identification\HostOnlyProcessor($objHostRedirect, FALSE);
 $objArtefacts->process($context);
 
-/*
-$objHostRedirect = new \T3census\Detection\Identification\HostOnlyProcessor(NULL, TRUE);
-$objHostRedirect->process($context);
-*/
 
 /*
 $objPathRedirect = new \T3census\Detection\Identification\FullPathProcessor(NULL, TRUE);
