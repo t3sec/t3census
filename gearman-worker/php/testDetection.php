@@ -5,6 +5,7 @@ $vendorDir = realpath($dir . '/../../vendor');
 
 require_once $libraryDir . '/Detection/Context.php';
 require_once $libraryDir . '/Detection/Request.php';
+require_once $libraryDir . '/Detection/Normalization/RedirectProcessor.php';
 require_once $libraryDir . '/Detection/Identification/HostOnlyProcessor.php';
 require_once $libraryDir . '/Detection/Identification/FullPathProcessor.php';
 require_once $libraryDir . '/Detection/Normalization/ShortenerRedirectOnlyProcessor.php';
@@ -32,23 +33,26 @@ $context->setUrl('http://www.walthelm-gruppe.com/unternehmen/standorte/');
 $context->setUrl('http://www.barsa.by');
 $context->setUrl('http://www.colleen-rae-holmes.com/index.php');
 
-$context->setUrl('http://turdashopping.ro/');
+$context->setUrl('http://www.maasdamgroep.nl/foo');
+
 #$context->setUrl('http://torontonews24.com/');
 #$context->setUrl('http://www.1-von-uns.de/typo3/index.php');
 
 
-$objArtefacts = new \T3census\Detection\Identification\Typo3ArtefactsProcessor(NULL, TRUE);
-$objPathRedirect = new \T3census\Detection\Identification\FullPathProcessor($objArtefacts, TRUE);
+
+$objTypo3Artefacts = new \T3census\Detection\Identification\Typo3ArtefactsProcessor(NULL, TRUE);
+$objPathRedirect = new \T3census\Detection\Identification\FullPathProcessor($objTypo3Artefacts, TRUE);
 $objPathNoRedirect = new \T3census\Detection\Identification\FullPathProcessor($objPathRedirect, FALSE);
 $objHostRedirect = new \T3census\Detection\Identification\HostOnlyProcessor($objPathNoRedirect, TRUE);
 $objHostNoRedirect = new \T3census\Detection\Identification\HostOnlyProcessor($objHostRedirect, FALSE);
-$objArtefacts->process($context);
+$objRedirect = new \T3census\Detection\Normalization\RedirectProcessor($objHostNoRedirect);
+$objShortener = new \T3census\Detection\Normalization\ShortenerRedirectOnlyProcessor($objRedirect);
+$objShortener->process($context);
 
 
-/*
-$objPathRedirect = new \T3census\Detection\Identification\FullPathProcessor(NULL, TRUE);
-$objPathRedirect->process($context);
-*/
+$objRedirect = new \T3census\Detection\Normalization\RedirectProcessor(NULL);
+$objRedirect->process($context);
+
 print_r($context);
 
 

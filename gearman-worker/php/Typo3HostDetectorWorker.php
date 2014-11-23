@@ -5,7 +5,8 @@ $vendorDir = realpath($dir . '/../../vendor');
 
 require_once $libraryDir . '/Detection/Context.php';
 require_once $libraryDir . '/Detection/Request.php';
-require_once $libraryDir . '/Detection/Identification/ShortenerRedirectOnlyProcessor.php';
+require_once $libraryDir . '/Detection/Normalization/ShortenerRedirectOnlyProcessor.php';
+require_once $libraryDir . '/Detection/Normalization/RedirectProcessor.php';
 require_once $libraryDir . '/Detection/Identification/HostOnlyProcessor.php';
 require_once $libraryDir . '/Detection/Identification/FullPathProcessor.php';
 require_once $libraryDir . '/Detection/Identification/Typo3ArtefactsProcessor.php';
@@ -56,7 +57,8 @@ class Typo3HostDetectorWorker {
 		$objPathNoRedirect = new \T3census\Detection\Identification\FullPathProcessor($objPathRedirect, FALSE);
 		$objHostRedirect = new \T3census\Detection\Identification\HostOnlyProcessor($objPathNoRedirect, TRUE);
 		$objHostNoRedirect = new \T3census\Detection\Identification\HostOnlyProcessor($objHostRedirect, FALSE);
-		$objShortener = new \T3census\Detection\Identification\ShortenerRedirectOnlyProcessor($objHostNoRedirect);
+		$objRedirect = new \T3census\Detection\Normalization\RedirectProcessor($objHostNoRedirect);
+		$objShortener = new \T3census\Detection\Normalization\ShortenerRedirectOnlyProcessor($objRedirect);
 		$objShortener->process($context);
 		unset($objShortener, $objHostNoRedirect, $objHostNoRedirect, $objHostRedirect, $objPathNoRedirect, $objPathRedirect);
 
