@@ -2,31 +2,31 @@ mysql> SELECT typo3_versionstring,count(host_id) FROM t3census_db.host WHERE typ
 +---------------------+----------------+
 | typo3_versionstring | count(host_id) |
 +---------------------+----------------+
-| TYPO3 3.6 CMS       |            490 |
-| TYPO3 3.7 CMS       |           1713 |
-| TYPO3 3.8 CMS       |           2826 |
-| TYPO3 4.0 CMS       |           5155 |
-| TYPO3 4.1 CMS       |          12492 |
-| TYPO3 4.2 CMS       |          27254 |
-| TYPO3 4.3 CMS       |          11853 |
-| TYPO3 4.4 CMS       |          24355 |
-| TYPO3 4.5 CMS       |         148015 |
-| TYPO3 4.6 CMS       |          12680 |
-| TYPO3 4.7 CMS       |          43283 |
-| TYPO3 6.0 CMS       |           5930 |
-| TYPO3 6.1 CMS       |          17907 |
-| TYPO3 6.2 CMS       |          16590 |
+| TYPO3 3.6 CMS       |            517 |
+| TYPO3 3.7 CMS       |           1838 |
+| TYPO3 3.8 CMS       |           2949 |
+| TYPO3 4.0 CMS       |           5343 |
+| TYPO3 4.1 CMS       |          12989 |
+| TYPO3 4.2 CMS       |          28297 |
+| TYPO3 4.3 CMS       |          12354 |
+| TYPO3 4.4 CMS       |          25287 |
+| TYPO3 4.5 CMS       |         153896 |
+| TYPO3 4.6 CMS       |          13185 |
+| TYPO3 4.7 CMS       |          45193 |
+| TYPO3 6.0 CMS       |           6136 |
+| TYPO3 6.1 CMS       |          18791 |
+| TYPO3 6.2 CMS       |          17739 |
 +---------------------+----------------+
-14 rows in set (4.70 sec)
+19 rows in set (0.83 sec)
 
 
 mysql> SELECT COUNT(host_id) FROM t3census_db.host WHERE typo3_installed;
 +----------------+
 | COUNT(host_id) |
 +----------------+
-|         338788 |
+|         353311 |
 +----------------+
-1 row in set (3.88 sec)
+1 row in set (1.01 sec)
 
 
 mysql> SELECT COUNT(DISTINCT host_domain) FROM t3census_db.host WHERE typo3_installed;
@@ -42,15 +42,15 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 +-------------------+-----------+
 | publicSuffix      | num_hosts |
 +-------------------+-----------+
-| de                |    222942 |
+| de                |    236284 |
 | ch                |     31460 |
 | com               |     17571 |
-| info              |      8408 |
+| info              |      9164 |
 | dk                |      7657 |
 | at                |      6539 |
 | nl                |      6122 |
 | eu                |      5996 |
-| biz               |      5444 |
+| biz               |      5869 |
 | org               |      3116 |
 | net               |      2257 |
 | be                |      2092 |
@@ -457,41 +457,42 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | ac.tz             |         1 |
 | berlin            |         1 |
 +-------------------+-----------+
-414 rows in set (4.14 sec)
+414 rows in set (1.65 sec)
 
 
 mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM t3census_db.server s INNER JOIN t3census_db.cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip) LEFT JOIN t3census_db.host h ON (s.server_id = h.fk_server_id) LEFT JOIN t3census_db.cidr_maintainer m ON (c.fk_maintainer_id = m.maintainer_id) WHERE h.typo3_installed=1 AND m.own_infrastructure GROUP BY c.fk_maintainer_id HAVING num_hosts > 100 ORDER BY num_hosts DESC;
 +-----------------------------------------------------------------------+-----------+
 | maintainer_description                                                | num_hosts |
 +-----------------------------------------------------------------------+-----------+
-| Corporation Service Company (CSC), Wilmington, Delaware, US           |       885 |
-| DENIC eG, Germany                                                     |       591 |
-| B&K Verwaltungs GmbH, Germany                                         |       532 |
-| Vienna University Computer Center                                     |       417 |
-| Studienkreis GmbH, Gießen, DE                                         |       388 |
-| Musterhauskuechen                                                     |       333 |
-| RAe Boelsen, Jumpertz, Brochhaus & Kollegen, Koeln, Germany           |       330 |
-| m2p entertainment GmbH, Bochum, DE                                    |       330 |
-| Leibniz-Rechenzentrum (LRZ), Germany                                  |       324 |
-| TU Berlin, campus network                                             |       287 |
-| Hypoport AG, Berlin, DE                                               |       285 |
+| Corporation Service Company (CSC), Wilmington, Delaware, US           |       947 |
+| DENIC eG, Germany                                                     |       620 |
+| B&K Verwaltungs GmbH, Germany                                         |       553 |
+| Vienna University Computer Center                                     |       418 |
+| Studienkreis GmbH, Gießen, DE                                         |       389 |
+| Musterhauskuechen                                                     |       341 |
+| RAe Boelsen, Jumpertz, Brochhaus & Kollegen, Koeln, Germany           |       333 |
+| m2p entertainment GmbH, Bochum, DE                                    |       331 |
+| Leibniz-Rechenzentrum (LRZ), Germany                                  |       329 |
+| Hypoport AG, Berlin, DE                                               |       315 |
+| TU Berlin, campus network                                             |       289 |
 | Danish Network for Research and Education                             |       261 |
-| Evangelische Landeskirche in Wuerttemberg, Germany                    |       236 |
+| Evangelische Landeskirche in Wuerttemberg, Germany                    |       244 |
 | Aarhus University, Denmark                                            |       199 |
-| Gottfried Wilhelm Leibniz Universitaet Hannover                       |       192 |
+| Gottfried Wilhelm Leibniz Universitaet Hannover                       |       194 |
+| VNR Verlag für die Deutsche Wirtschaft AG, Bonn, DE                   |       191 |
 | Mjam GmbH, Wien, AT                                                   |       191 |
-| Bergische Universitaet Wuppertal                                      |       185 |
+| Bergische Universitaet Wuppertal                                      |       186 |
 | Republic of Slovenia - Ministry of Justice                            |       182 |
 | Charite - Universitaetsmedizin Berlin                                 |       178 |
-| VNR Verlag für die Deutsche Wirtschaft AG, Bonn, DE                   |       169 |
 | WIR Bank Genossenschaft, Basel, CH                                    |       166 |
-| Universitaet zu Koeln                                                 |       161 |
-| Ostfalia Hochschule für angewandte Wissenschaften, Wolfenbüttel, DE   |       156 |
-| Feriendialyse Dr. Berger und Partner GbR, Wetzlar, DE                 |       153 |
-| Verlagsgesellschaft Madsack GmbH & Co., Hannover, DE                  |       153 |
+| Universitaet zu Koeln                                                 |       162 |
+| Verlagsgesellschaft Madsack GmbH & Co., Hannover, DE                  |       160 |
+| Feriendialyse Dr. Berger und Partner GbR, Wetzlar, DE                 |       158 |
+| Ostfalia Hochschule für angewandte Wissenschaften, Wolfenbüttel, DE   |       157 |
 | Bitly Inc., US                                                        |       132 |
+| ACS Automotive Communication Services GmbH, Isernhagen, DE            |       131 |
 | Universite Laval, Canada                                              |       131 |
-| ACS Automotive Communication Services GmbH, Isernhagen, DE            |       123 |
 | King College, Bristol, Tennessee, US                                  |       104 |
+| Sagaflor AG, Baunatal, DE                                             |       102 |
 +-----------------------------------------------------------------------+-----------+
-29 rows in set (28.97 sec)
+30 rows in set (30.50 sec)
