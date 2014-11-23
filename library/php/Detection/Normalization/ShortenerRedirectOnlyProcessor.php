@@ -41,6 +41,7 @@ class ShortenerRedirectOnlyProcessor extends \T3census\Detection\AbstractProcess
 		'ow.ly',
 		'rlmk.me',
 		'shar.es',
+		't3b.eu',
 		't3n.me',
 		'tinyurl.com',
 		'ur1.ca',
