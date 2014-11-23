@@ -51,20 +51,29 @@ class RedirectProcessor extends \T3census\Detection\AbstractProcessor implements
 
 		$objOriginUrl = \Purl\Url::parse($context->getUrl());
 		$urlOriginHost = $objOriginUrl->get('host');
+		$urlOriginScheme = $objOriginUrl->get('scheme');
 
 		$objFetcher = new \T3census\Url\UrlFetcher();
 		$objFetcher->setUrl($context->getUrl())->fetchUrl(\T3census\Url\UrlFetcher::HTTP_HEAD, FALSE, $this->allowRedirect);
 
 		if ($objFetcher->getErrno() === 0 && $objFetcher->getNumRedirects() > 0) {
+			$objUrl = $objOriginUrl;
+
 			$objProcessedUrl = \Purl\Url::parse($objFetcher->getUrl());
 			$objProcessedHost = $objProcessedUrl->get('host');
+			$objProcessedScheme = $objProcessedUrl->get('scheme');
 
 			if (0 !== strcmp($urlOriginHost, $objProcessedHost)) {
-				$newUrl = $objOriginUrl->set('host', $objProcessedHost)->getUrl();
-				$context->setUrl($newUrl);
-				unset($newUrl);
+				$objUrl->set('host', $objProcessedHost)->getUrl();
 			}
-			unset($objProcessedHost, $objProcessedUrl);
+
+			if (0 !== strcmp($urlOriginScheme, $objProcessedScheme)) {
+				$objUrl->set('scheme', $objProcessedScheme);
+			}
+
+			$context->setUrl($objUrl->getUrl());
+
+			unset($objProcessedScheme, $urlOriginScheme, $objProcessedHost, $objProcessedUrl);
 		}
 		unset($objFetcher, $urlOriginHost, $objOriginUrl);
 

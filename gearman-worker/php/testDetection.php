@@ -34,9 +34,7 @@ $context->setUrl('http://www.barsa.by');
 $context->setUrl('http://www.colleen-rae-holmes.com/index.php');
 
 $context->setUrl('http://www.maasdamgroep.nl/foo');
-
-#$context->setUrl('http://torontonews24.com/');
-#$context->setUrl('http://www.1-von-uns.de/typo3/index.php');
+$context->setUrl('http://www.foreverknowledge.info');
 
 
 
@@ -50,8 +48,8 @@ $objShortener = new \T3census\Detection\Normalization\ShortenerRedirectOnlyProce
 $objShortener->process($context);
 
 
-$objRedirect = new \T3census\Detection\Normalization\RedirectProcessor(NULL);
-$objRedirect->process($context);
+//$objRedirect = new \T3census\Detection\Normalization\RedirectProcessor(NULL);
+//$objRedirect->process($context);
 
 print_r($context);
 
