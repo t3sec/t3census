@@ -14,6 +14,7 @@ require_once $libraryDir . '/Detection/Classification/HostOnlyProcessor.php';
 require_once $libraryDir . '/Detection/Classification/FullPathProcessor.php';
 require_once $libraryDir . '/Detection/Classification/Typo3ArtefactsProcessor.php';
 require_once $libraryDir . '/Detection/Classification/Typo3FingerprintProcessor.php';
+require_once $libraryDir . '/Gearman/Serverstatus.php';
 require_once $vendorDir . '/autoload.php';
 
 
@@ -30,6 +31,15 @@ class Typo3HostDetectorWorker {
 	}
 
 	public function setUp() {
+		try {
+			$gearmanStatus = new T3census\Gearman\Serverstatus();
+			$gearmanStatus->setHost($this->host)->setPort($this->port);
+			$gearmanStatus->poll();
+		} catch (GearmanException $e) {
+			fwrite(STDERR, sprintf('ERROR: Job-Server: %s (Errno: %u)' . PHP_EOL, $e->getMessage(), $e->getCode()));
+			die(1);
+		}
+
 		$this->gearmanWorker = new GearmanWorker();
 		$this->gearmanWorker->addServer($this->host, $this->port);
 		$this->gearmanWorker->addFunction('TYPO3HostDetector', array($this, 'fetchUrl'));
@@ -81,9 +91,10 @@ class Typo3HostDetectorWorker {
 	public function run() {
 		$this->setUp();
 		$this->gearmanWorker->setTimeout(5000); //wake up after 5 seconds
-		echo "Starting...\n";
+		fwrite(STDOUT, 'Starting...' . PHP_EOL);
 		while (1) {
-			@$this->gearmanWorker->work();
+			$this->gearmanWorker->work();
+
 			if ($this->gearmanWorker->returnCode() == GEARMAN_TIMEOUT) {
 				//do some other work here
 				continue;

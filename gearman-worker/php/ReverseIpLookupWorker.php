@@ -6,6 +6,7 @@ $vendorDir = realpath($dir . '/../../vendor');
 
 require_once $libraryDir . '/Bing/Api/ReverseIpLookup.php';
 require_once $libraryDir . '/Bing/Scraper/ReverseIpLookup.php';
+require_once $libraryDir . '/Gearman/Serverstatus.php';
 require_once $vendorDir . '/autoload.php';
 
 class ReverseIpLookupWorker {
@@ -23,6 +24,15 @@ class ReverseIpLookupWorker {
 	}
 
 	public function setUp() {
+		try {
+			$gearmanStatus = new T3census\Gearman\Serverstatus();
+			$gearmanStatus->setHost($this->host)->setPort($this->port);
+			$gearmanStatus->poll();
+		} catch (GearmanException $e) {
+			fwrite(STDERR, sprintf('ERROR: Job-Server: %s (Errno: %u)' . PHP_EOL, $e->getMessage(), $e->getCode()));
+			die(1);
+		}
+
 		$this->gearmanWorker = new GearmanWorker();
 		$this->gearmanWorker->addServer($this->host, $this->port);
 		$this->gearmanWorker->addFunction("ReverseIpLookup", array($this, 'fetchHostnames'));
