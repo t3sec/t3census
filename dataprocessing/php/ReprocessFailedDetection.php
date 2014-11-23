@@ -58,46 +58,71 @@ if (is_object($res)) {
 			$url .= $row['host_domain'];
 			$url .= (is_null($row['host_path']) ? '' : '/' . ltrim($row['host_path'], '/'));
 
+			fwrite(STDOUT, 'URL: ' . $url . ' UID:'. $row['host_id'] . PHP_EOL);
+
 			$detectionResult = json_decode($client->doNormal($gearmanFunction, $url));
 			if (is_object($detectionResult)) {
 
-				/*
-				if (!property_exists($detectionResult, 'TYPO3version')) {
-					#print_r($row);
-					fwrite(STDOUT, 'NO RESULT:' . $url . PHP_EOL);
-					#print_r($detectionResult);
-					break;
-				}
-				*/
+				print_r($detectionResult);
 
+/*
 				if (property_exists($detectionResult, 'TYPO3') && is_bool($detectionResult->TYPO3) && !$detectionResult->TYPO3) {
-					#print_r($row);
-					fwrite(STDOUT, 'NO TYPO3: ' . $url . PHP_EOL);
-					$updateQuery = sprintf('UPDATE host SET typo3_installed=0 WHERE host_id=%u;',
+					fwrite(STDOUT, 'no longer TYPO3' . PHP_EOL);
+					$updateQuery = sprintf('UPDATE host SET typo3_installed=0,typo3_versionstring=NULL,host_name=NULL,host_scheme=\'%s\',host_subdomain=%s,host_domain=\'%s\',host_suffix=%s,host_path=%s,updated=\'%s\' WHERE host_id=%u;',
+						mysqli_real_escape_string($mysqli, $detectionResult->scheme),
+						(is_null($detectionResult->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->subdomain) . '\''),
+						$detectionResult->registerableDomain,
+						(is_null($detectionResult->publicSuffix) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->publicSuffix) . '\''),
+						(is_null($detectionResult->path) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->path) . '\''),
+						$date->format('Y-m-d H:i:s'),
 						$row['host_id']
 					);
+					fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
 					$updateResult = $mysqli->query($updateQuery);
 					if (!is_bool($updateResult) || !$updateResult) {
 						fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $mysqli->error, $mysqli->errno));
 						$isSuccessful = FALSE;
 						break;
 					}
-					#print_r($detectionResult);
 					continue;
 				}
+*/
 
-				if (property_exists($detectionResult, 'TYPO3version') && is_string($detectionResult->TYPO3version)) {
-					#print_r($row);
-					#fwrite(STDOUT, $url . PHP_EOL);
-					print_r($detectionResult);
-
-					$updateQuery = sprintf('UPDATE host SET typo3_versionstring=%s,host_path=%s,updated=\'%s\' WHERE host_id=%u;',
-						(is_null($detectionResult->TYPO3version) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->TYPO3version) . '\''),
+				if (property_exists($detectionResult, 'TYPO3') && is_bool($detectionResult->TYPO3) && $detectionResult->TYPO3 && !is_string($detectionResult->TYPO3version)) {
+					fwrite(STDOUT, 'TYPO3 identification only' . PHP_EOL);
+					$updateQuery = sprintf('UPDATE host SET host_name=NULL,host_scheme=\'%s\',host_subdomain=%s,host_domain=\'%s\',host_suffix=%s,host_path=%s,updated=\'%s\' WHERE host_id=%u;',
+						mysqli_real_escape_string($mysqli, $detectionResult->scheme),
+						(is_null($detectionResult->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->subdomain) . '\''),
+						$detectionResult->registerableDomain,
+						(is_null($detectionResult->publicSuffix) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->publicSuffix) . '\''),
 						(is_null($detectionResult->path) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->path) . '\''),
 						$date->format('Y-m-d H:i:s'),
 						$row['host_id']
 					);
-					#fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
+					fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
+					$updateResult = $mysqli->query($updateQuery);
+					if (!is_bool($updateResult) || !$updateResult) {
+						fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $mysqli->error, $mysqli->errno));
+						$isSuccessful = FALSE;
+						break;
+					}
+					continue;
+				}
+
+				if (property_exists($detectionResult, 'TYPO3version') && is_string($detectionResult->TYPO3version)) {
+					fwrite(STDOUT, 'TYPO3 identification + classification' . PHP_EOL);
+
+					$updateQuery = sprintf('UPDATE host SET typo3_versionstring=%s,host_name=NULL,host_scheme=\'%s\',host_subdomain=%s,host_domain=\'%s\',host_suffix=%s,host_path=%s,updated=\'%s\' WHERE host_id=%u;',
+						(is_null($detectionResult->TYPO3version) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->TYPO3version) . '\''),
+						mysqli_real_escape_string($mysqli, $detectionResult->scheme),
+						(is_null($detectionResult->subdomain) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->subdomain) . '\''),
+						$detectionResult->registerableDomain,
+						(is_null($detectionResult->publicSuffix) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->publicSuffix) . '\''),
+						(is_null($detectionResult->path) ? 'NULL' : '\'' . mysqli_real_escape_string($mysqli, $detectionResult->path) . '\''),
+						$date->format('Y-m-d H:i:s'),
+						$row['host_id']
+					);
+					fwrite(STDOUT, sprintf('DEBUG: Query: %s' . PHP_EOL, $updateQuery));
 					$updateResult = $mysqli->query($updateQuery);
 					if (!is_bool($updateResult) || !$updateResult) {
 						fwrite(STDERR, sprintf('ERROR: %s (Errno: %u)' . PHP_EOL, $mysqli->error, $mysqli->errno));
