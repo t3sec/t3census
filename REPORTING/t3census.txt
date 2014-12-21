@@ -2,90 +2,90 @@ mysql> SELECT typo3_versionstring,count(host_id) FROM t3census_db.host WHERE typ
 +---------------------+----------------+
 | typo3_versionstring | count(host_id) |
 +---------------------+----------------+
-| TYPO3 3.6 CMS       |            545 |
-| TYPO3 3.7 CMS       |           1884 |
-| TYPO3 3.8 CMS       |           3005 |
-| TYPO3 4.0 CMS       |           5442 |
-| TYPO3 4.1 CMS       |          13343 |
-| TYPO3 4.2 CMS       |          28901 |
-| TYPO3 4.3 CMS       |          12643 |
-| TYPO3 4.4 CMS       |          26121 |
-| TYPO3 4.5 CMS       |         158529 |
-| TYPO3 4.6 CMS       |          13489 |
-| TYPO3 4.7 CMS       |          46636 |
-| TYPO3 6.0 CMS       |           6342 |
-| TYPO3 6.1 CMS       |          19931 |
-| TYPO3 6.2 CMS       |          20521 |
-| TYPO3 7.0 CMS       |            113 |
+| TYPO3 3.6 CMS       |            580 |
+| TYPO3 3.7 CMS       |           1888 |
+| TYPO3 3.8 CMS       |           3033 |
+| TYPO3 4.0 CMS       |           5481 |
+| TYPO3 4.1 CMS       |          13431 |
+| TYPO3 4.2 CMS       |          29105 |
+| TYPO3 4.3 CMS       |          12717 |
+| TYPO3 4.4 CMS       |          26231 |
+| TYPO3 4.5 CMS       |         159153 |
+| TYPO3 4.6 CMS       |          13583 |
+| TYPO3 4.7 CMS       |          46841 |
+| TYPO3 6.0 CMS       |           6369 |
+| TYPO3 6.1 CMS       |          20067 |
+| TYPO3 6.2 CMS       |          20677 |
+| TYPO3 7.0 CMS       |            125 |
 +---------------------+----------------+
-15 rows in set (3.23 sec)
+15 rows in set (2.90 sec)
 
 
 mysql> SELECT COUNT(host_id) FROM t3census_db.host WHERE typo3_installed;
 +----------------+
 | COUNT(host_id) |
 +----------------+
-|         359354 |
+|         361462 |
 +----------------+
-1 row in set (1.14 sec)
+1 row in set (1.09 sec)
 
 
 mysql> SELECT COUNT(DISTINCT host_domain) FROM t3census_db.host WHERE typo3_installed;
 +-----------------------------+
 | COUNT(DISTINCT host_domain) |
 +-----------------------------+
-|                      293496 |
+|                      295230 |
 +-----------------------------+
-1 row in set (11.05 sec)
+1 row in set (2.40 sec)
 
 
 mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.host WHERE typo3_installed=1 AND host_suffix IS NOT NULL GROUP BY host_suffix ORDER BY num_hosts DESC;
 +-------------------+-----------+
 | publicSuffix      | num_hosts |
 +-------------------+-----------+
-| de                |    240003 |
-| ch                |     31369 |
-| com               |     18918 |
-| info              |      9824 |
-| dk                |      7649 |
-| at                |      6588 |
+| de                |    240294 |
+| ch                |     31392 |
+| com               |     20572 |
+| info              |      9866 |
+| dk                |      7651 |
+| at                |      6606 |
 | biz               |      6197 |
-| nl                |      6060 |
-| eu                |      6022 |
-| org               |      3172 |
-| net               |      2348 |
+| nl                |      6067 |
+| eu                |      6035 |
+| org               |      3183 |
+| net               |      2355 |
 | be                |      2066 |
 | pl                |      2011 |
-| fr                |      1871 |
+| fr                |      1882 |
 | sk                |      1809 |
-| se                |      1585 |
-| us                |      1405 |
-| it                |      1232 |
+| se                |      1587 |
+| us                |      1408 |
+| it                |      1234 |
 | no                |       553 |
 | ru                |       482 |
 | ac.at             |       461 |
 | cz                |       434 |
 | in                |       403 |
-| es                |       374 |
-| co.uk             |       367 |
-| ca                |       336 |
+| es                |       377 |
+| co.uk             |       371 |
+| ca                |       338 |
 | si                |       322 |
 | hu                |       298 |
-| fi                |       251 |
-| com.au            |       209 |
+| fi                |       252 |
+| com.au            |       213 |
 | www.ro            |       182 |
-| edu               |       177 |
-| co.at             |       137 |
+| edu               |       178 |
+| co.at             |       138 |
 | cc                |       136 |
 | gr                |       133 |
 | hr                |       119 |
 | lu                |       113 |
 | ie                |       111 |
-| ag                |       104 |
-| qc.ca             |       102 |
+| ag                |       105 |
+| qc.ca             |       103 |
 | tv                |       100 |
 | com.tr            |        82 |
-| co.nz             |        80 |
+| co.nz             |        81 |
 | edu.tr            |        80 |
 | de.com            |        77 |
 | ro                |        74 |
@@ -195,6 +195,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | or.tz             |         6 |
 | co.ke             |         6 |
 | com.mk            |         6 |
+| asso.fr           |         6 |
 | grosseto.it       |         6 |
 | cci.fr            |         6 |
 | gov.ru            |         5 |
@@ -205,9 +206,9 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | gr.com            |         5 |
 | com.ba            |         5 |
 | tw                |         5 |
+| cat               |         5 |
 | nat.tn            |         5 |
 | re                |         5 |
-| asso.fr           |         5 |
 | krakow.pl         |         5 |
 | kr.com            |         5 |
 | kiev.ua           |         5 |
@@ -224,7 +225,6 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | gov               |         4 |
 | ra.it             |         4 |
 | com.ve            |         4 |
-| cat               |         4 |
 | ac.in             |         4 |
 | waw.pl            |         4 |
 | gov.tr            |         4 |
@@ -292,6 +292,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | edu.bo            |         2 |
 | mk                |         2 |
 | kolobrzeg.pl      |         2 |
+| berlin            |         2 |
 | firenze.it        |         2 |
 | katowice.pl       |         2 |
 | sa.it             |         2 |
@@ -376,7 +377,6 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | info.pl           |         1 |
 | dyndns.info       |         1 |
 | ac.tz             |         1 |
-| berlin            |         1 |
 | se.net            |         1 |
 | vu                |         1 |
 | alessandria.it    |         1 |
@@ -426,6 +426,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | turystyka.pl      |         1 |
 | gliwice.pl        |         1 |
 | asso.mc           |         1 |
+| community         |         1 |
 | viterbo.it        |         1 |
 | com.dz            |         1 |
 | ae.org            |         1 |
@@ -459,7 +460,7 @@ mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3cen
 | mb.ca             |         1 |
 | cd                |         1 |
 +-------------------+-----------+
-415 rows in set (2.45 sec)
+416 rows in set (1.72 sec)
 
 
 mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM t3census_db.server s INNER JOIN t3census_db.cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip) LEFT JOIN t3census_db.host h ON (s.server_id = h.fk_server_id) LEFT JOIN t3census_db.cidr_maintainer m ON (c.fk_maintainer_id = m.maintainer_id) WHERE h.typo3_installed=1 AND m.own_infrastructure GROUP BY c.fk_maintainer_id HAVING num_hosts > 100 ORDER BY num_hosts DESC;
@@ -468,13 +469,13 @@ mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM t3cens
 +-----------------------------------------------------------------------+-----------+
 | Corporation Service Company (CSC), Wilmington, Delaware, US           |       959 |
 | DENIC eG, Germany                                                     |       626 |
-| B&K Verwaltungs GmbH, Germany                                         |       554 |
+| B&K Verwaltungs GmbH, Germany                                         |       555 |
 | Vienna University Computer Center                                     |       418 |
 | Studienkreis GmbH, Gießen, DE                                         |       389 |
-| Musterhauskuechen                                                     |       348 |
+| Musterhauskuechen                                                     |       349 |
 | RAe Boelsen, Jumpertz, Brochhaus & Kollegen, Koeln, Germany           |       334 |
 | Leibniz-Rechenzentrum (LRZ), Germany                                  |       333 |
-| m2p entertainment GmbH, Bochum, DE                                    |       331 |
+| m2p entertainment GmbH, Bochum, DE                                    |       332 |
 | Hypoport AG, Berlin, DE                                               |       317 |
 | TU Berlin, campus network                                             |       290 |
 | Danish Network for Research and Education                             |       261 |
@@ -497,4 +498,4 @@ mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM t3cens
 | Sagaflor AG, Baunatal, DE                                             |       105 |
 | King College, Bristol, Tennessee, US                                  |       104 |
 +-----------------------------------------------------------------------+-----------+
-30 rows in set (30.22 sec)
+30 rows in set (30.78 sec)
