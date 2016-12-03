@@ -90,7 +90,7 @@ CREATE TABLE twitter_user (
 
 CREATE TABLE twitter_tweet (
 	tweet_id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-	tweet_text      VARCHAR(255) DEFAULT NULL,
+	tweet_text      VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
 	twitter_id      BIGINT UNSIGNED NOT NULL,
 	tweet_processed BOOL            NOT NULL,
 	created         DATETIME        NOT NULL,
@@ -105,7 +105,7 @@ CREATE TABLE twitter_tweet (
 
 CREATE TABLE twitter_url (
 	url_id      BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-	url_text    VARCHAR(255)    NOT NULL,
+	url_text    VARCHAR(510)    NOT NULL,
 	fk_tweet_id BIGINT UNSIGNED NOT NULL,
 	FOREIGN KEY fk_tweet_id (fk_tweet_id)
 	REFERENCES twitter_tweet (tweet_id)
