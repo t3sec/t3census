@@ -60,7 +60,7 @@ CREATE TABLE host (
 	host_scheme         VARCHAR(10)     NULL,
 	host_subdomain      VARCHAR(128)    NULL,
 	host_domain         VARCHAR(128)    NOT NULL,
-	host_suffix         VARCHAR(28)     NULL,
+	host_suffix         VARCHAR(34)     NULL,
 	host_name           VARCHAR(255)    NULL,
 	host_path           VARCHAR(255)    NULL,
 	fk_server_id        BIGINT UNSIGNED NOT NULL,
