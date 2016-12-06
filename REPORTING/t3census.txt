@@ -2,515 +2,423 @@ mysql> SELECT typo3_versionstring,count(host_id) FROM t3census_db.host WHERE typ
 +---------------------+----------------+
 | typo3_versionstring | count(host_id) |
 +---------------------+----------------+
-| NULL                |           2570 |
-| TYPO3 3.6 CMS       |            585 |
-| TYPO3 3.7 CMS       |           1889 |
-| TYPO3 3.8 CMS       |           3039 |
-| TYPO3 4.0 CMS       |           5495 |
-| TYPO3 4.1 CMS       |          13450 |
-| TYPO3 4.2 CMS       |          29169 |
-| TYPO3 4.3 CMS       |          12737 |
-| TYPO3 4.4 CMS       |          26294 |
-| TYPO3 4.5 CMS       |         159379 |
-| TYPO3 4.6 CMS       |          13605 |
-| TYPO3 4.7 CMS       |          46916 |
-| TYPO3 6.0 CMS       |           6379 |
-| TYPO3 6.1 CMS       |          20147 |
-| TYPO3 6.2 CMS       |          21082 |
-| TYPO3 7.0 CMS       |            141 |
-| TYPO3 7.1 CMS       |              4 |
-| TYPO3 7.2 CMS       |              1 |
-| TYPO3 7.6 CMS       |             24 |
-| TYPO3 8.3 CMS       |             18 |
-| TYPO3 8.4 CMS       |              1 |
+| NULL                |           2131 |
+| TYPO3 3.6 CMS       |            336 |
+| TYPO3 3.7 CMS       |           1229 |
+| TYPO3 3.8 CMS       |           1523 |
+| TYPO3 4.0 CMS       |           2794 |
+| TYPO3 4.1 CMS       |           6292 |
+| TYPO3 4.2 CMS       |          13558 |
+| TYPO3 4.3 CMS       |           6008 |
+| TYPO3 4.4 CMS       |          11359 |
+| TYPO3 4.5 CMS       |          74833 |
+| TYPO3 4.6 CMS       |           6722 |
+| TYPO3 4.7 CMS       |          22849 |
+| TYPO3 6.0 CMS       |           3095 |
+| TYPO3 6.1 CMS       |           9792 |
+| TYPO3 6.2 CMS       |          73791 |
+| TYPO3 6.3 CMS       |              6 |
+| TYPO3 7.0 CMS       |             87 |
+| TYPO3 7.1 CMS       |            143 |
+| TYPO3 7.2 CMS       |             96 |
+| TYPO3 7.3 CMS       |             45 |
+| TYPO3 7.6 CMS       |           8019 |
+| TYPO3 8.0 CMS       |              1 |
+| TYPO3 8.1 CMS       |              3 |
+| TYPO3 8.2 CMS       |              3 |
+| TYPO3 8.3 CMS       |           8325 |
+| TYPO3 8.4 CMS       |           1152 |
+| TYPO3 9.0 CMS       |             22 |
+| TYPO3 9.9 CMS       |              1 |
 +---------------------+----------------+
-21 rows in set (1,06 sec)
+28 rows in set (0,84 sec)
 
 
 mysql> SELECT COUNT(host_id) FROM t3census_db.host WHERE typo3_installed;
 +----------------+
 | COUNT(host_id) |
 +----------------+
-|         362925 |
+|         254215 |
 +----------------+
-1 row in set (0,12 sec)
+1 row in set (0,11 sec)
 
 
 mysql> SELECT COUNT(DISTINCT host_domain) FROM t3census_db.host WHERE typo3_installed;
 +-----------------------------+
 | COUNT(DISTINCT host_domain) |
 +-----------------------------+
-|                      296230 |
+|                      147522 |
 +-----------------------------+
-1 row in set (0,56 sec)
+1 row in set (0,46 sec)
 
 
 mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.host WHERE typo3_installed=1 AND host_suffix IS NOT NULL GROUP BY host_suffix ORDER BY num_hosts DESC;
 +-------------------+-----------+
 | publicSuffix      | num_hosts |
 +-------------------+-----------+
-| de                |    240835 |
-| ch                |     31460 |
-| com               |     21092 |
-| info              |      9872 |
-| dk                |      7662 |
-| at                |      6699 |
-| biz               |      6197 |
-| nl                |      6099 |
-| eu                |      6050 |
-| org               |      3214 |
-| net               |      2373 |
-| be                |      2065 |
-| pl                |      2012 |
-| fr                |      1895 |
-| sk                |      1809 |
-| se                |      1589 |
-| us                |      1407 |
-| it                |      1244 |
-| no                |       556 |
-| ru                |       484 |
-| ac.at             |       464 |
-| cz                |       436 |
-| in                |       405 |
-| es                |       378 |
-| co.uk             |       375 |
-| ca                |       339 |
-| si                |       322 |
-| hu                |       299 |
-| fi                |       254 |
-| com.au            |       213 |
-| www.ro            |       182 |
-| edu               |       178 |
-| gr                |       139 |
-| co.at             |       139 |
-| cc                |       137 |
-| hr                |       119 |
-| lu                |       113 |
-| ie                |       111 |
-| ag                |       111 |
-| qc.ca             |       109 |
-| tv                |       102 |
-| com.tr            |        83 |
-| co.nz             |        81 |
-| edu.tr            |        80 |
-| ro                |        76 |
-| de.com            |        75 |
-| cn                |        74 |
-| lv                |        71 |
-| com.br            |        70 |
-| nu                |        63 |
-| li                |        63 |
-| com.pl            |        61 |
-| ee                |        58 |
-| gov.rw            |        56 |
-| edu.pl            |        55 |
-| com.ua            |        55 |
-| ud.it             |        54 |
-| org.uk            |        49 |
-| cl                |        46 |
-| pt                |        46 |
-| co.jp             |        45 |
-| jp                |        40 |
-| co.za             |        40 |
-| gv.at             |        36 |
-| org.ua            |        34 |
-| mobi              |        32 |
-| rs                |        32 |
-| org.au            |        32 |
-| gob.ec            |        32 |
-| gl                |        31 |
-| com.cn            |        30 |
-| uk.com            |        30 |
+| de                |    170137 |
+| com               |     25403 |
+| ch                |     19642 |
+| at                |      5279 |
+| dk                |      4458 |
+| eu                |      3731 |
+| info              |      3728 |
+| nl                |      3044 |
+| org               |      2606 |
+| net               |      2204 |
+| biz               |      1538 |
+| fr                |      1439 |
+| be                |      1029 |
+| pl                |      1028 |
+| sk                |       929 |
+| it                |       878 |
+| se                |       712 |
+| ac.at             |       451 |
+| ru                |       320 |
+| cz                |       313 |
+| es                |       265 |
+| no                |       261 |
+| co.uk             |       246 |
+| ca                |       225 |
+| hu                |       222 |
+| si                |       219 |
+| us                |       215 |
+| ag                |       205 |
+| ro                |       172 |
+| tv                |       143 |
+| cc                |       119 |
+| fi                |       112 |
+| com.au            |       108 |
+| gr                |       108 |
+| co.at             |       103 |
+| qc.ca             |        91 |
+| in                |        87 |
+| hr                |        78 |
+| edu.tr            |        78 |
+| lu                |        73 |
+| co.nz             |        60 |
+| com.tr            |        56 |
+| ud.it             |        53 |
+| edu.pl            |        53 |
+| ie                |        50 |
+| lv                |        50 |
+| li                |        49 |
+| cn                |        47 |
+| gov.rw            |        46 |
+| edu               |        43 |
+| ee                |        42 |
+| com.br            |        40 |
+| nu                |        38 |
+| co.jp             |        37 |
+| com.pl            |        32 |
+| com.ua            |        31 |
+| gv.at             |        30 |
+| pt                |        30 |
 | tm.fr             |        30 |
-| org.pl            |        29 |
-| ac.fj             |        29 |
-| us.com            |        28 |
-| or.at             |        28 |
-| bg                |        28 |
-| ba                |        27 |
-| com.ar            |        26 |
-| asia              |        25 |
-| lt                |        25 |
-| aero              |        24 |
-| ly                |        24 |
-| pu.it             |        23 |
-| ua                |        22 |
-| chambagri.fr      |        22 |
-| kz                |        21 |
-| org.nz            |        21 |
-| ru.com            |        19 |
-| bz.it             |        19 |
-| ac.uk             |        19 |
-| com.sg            |        18 |
-| ae                |        18 |
-| lviv.ua           |        18 |
-| travel            |        17 |
-| com.mx            |        16 |
-| sg                |        15 |
-| net.au            |        14 |
-| gov.uk            |        14 |
-| co                |        14 |
-| me                |        14 |
-| edu.co            |        13 |
-| co.id             |        13 |
-| br.com            |        13 |
-| dz                |        12 |
-| gov.tn            |        12 |
+| jp                |        28 |
+| org.uk            |        28 |
+| org.pl            |        27 |
+| saarland          |        26 |
+| nrw               |        25 |
+| co.za             |        25 |
+| ac.fj             |        23 |
+| rs                |        22 |
+| pu.it             |        22 |
+| sh                |        22 |
+| berlin            |        21 |
+| gl                |        21 |
+| org.ua            |        20 |
+| aero              |        19 |
+| chambagri.fr      |        18 |
+| swiss             |        18 |
+| ua                |        17 |
+| ba                |        17 |
+| bg                |        16 |
+| lt                |        16 |
+| cl                |        16 |
+| travel            |        16 |
+| com.cn            |        15 |
+| ac.uk             |        15 |
+| bz.it             |        15 |
+| org.au            |        14 |
+| com.sg            |        13 |
+| or.at             |        13 |
+| com.de            |        12 |
 | pn.it             |        12 |
-| cn.com            |        12 |
-| co.kr             |        12 |
-| fo                |        12 |
-| tn                |        12 |
-| by                |        12 |
-| com.de            |        11 |
-| int               |        11 |
-| com.na            |        11 |
+| ae                |        12 |
+| lviv.ua           |        12 |
+| st                |        11 |
+| gov.tn            |        11 |
+| com.ar            |        11 |
+| mobi              |        11 |
+| kz                |        11 |
 | eu.com            |        11 |
-| com.hr            |        11 |
-| gouv.fr           |        10 |
-| coop              |        10 |
-| br                |        10 |
-| sh                |        10 |
-| am                |        10 |
-| com.co            |        10 |
+| co                |        11 |
+| com.mx            |        11 |
+| hamburg           |        11 |
+| org.nz            |        10 |
+| me                |        10 |
+| asia              |        10 |
+| int               |        10 |
+| edu.co            |        10 |
+| co.kr             |        10 |
+| ruhr              |         9 |
+| name              |         9 |
 | ws                |         9 |
-| kr                |         8 |
-| hu.com            |         8 |
-| mx                |         8 |
-| hk                |         8 |
-| as                |         8 |
-| org.co            |         8 |
-| museum            |         8 |
-| gov.ua            |         8 |
-| pro               |         8 |
-| nhs.uk            |         8 |
-| to                |         8 |
-| st                |         8 |
-| name              |         8 |
-| md                |         8 |
-| rw                |         8 |
-| org.tr            |         8 |
-| co.il             |         7 |
-| com.tw            |         7 |
-| co.in             |         7 |
-| co.hu             |         7 |
-| com.my            |         7 |
-| or.jp             |         7 |
-| co.ke             |         6 |
-| com.mk            |         6 |
-| asso.fr           |         6 |
-| grosseto.it       |         6 |
-| cci.fr            |         6 |
-| fm                |         6 |
-| co.th             |         6 |
-| se.com            |         6 |
-| or.tz             |         6 |
-| tw                |         5 |
-| cat               |         5 |
-| nat.tn            |         5 |
-| re                |         5 |
-| krakow.pl         |         5 |
-| kr.com            |         5 |
-| kiev.ua           |         5 |
+| sg                |         9 |
+| co.id             |         9 |
+| tn                |         8 |
+| co.in             |         8 |
+| global            |         8 |
+| pro               |         7 |
+| cx                |         7 |
+| com.co            |         7 |
+| mx                |         7 |
+| by                |         7 |
+| schule            |         7 |
+| media             |         7 |
+| edu.es            |         7 |
+| fm                |         7 |
+| br                |         7 |
+| as                |         6 |
+| koeln             |         6 |
+| nhs.uk            |         6 |
+| or.jp             |         6 |
+| hk                |         6 |
+| com.my            |         6 |
+| gov.uk            |         6 |
+| bz                |         6 |
+| com.na            |         6 |
 | rn.it             |         5 |
-| if.ua             |         5 |
-| cx                |         5 |
-| gov.pl            |         5 |
+| com.tw            |         5 |
+| plus              |         5 |
 | sk.ca             |         5 |
-| bz                |         5 |
-| gov.ru            |         5 |
-| edu.ua            |         5 |
-| com.ph            |         5 |
-| tn.it             |         5 |
-| is                |         5 |
-| gr.com            |         5 |
-| tt                |         5 |
-| com.ba            |         5 |
-| ra.it             |         4 |
-| com.ve            |         4 |
-| ac.in             |         4 |
-| waw.pl            |         4 |
-| gov.tr            |         4 |
-| com.gr            |         4 |
-| com.ec            |         4 |
+| org.tr            |         5 |
+| gouv.fr           |         5 |
+| nat.tn            |         5 |
+| fo                |         5 |
+| ms                |         5 |
+| gov               |         5 |
+| bio               |         4 |
+| grosseto.it       |         4 |
+| com.ba            |         4 |
+| kiev.ua           |         4 |
+| museum            |         4 |
+| dyndns.info       |         4 |
+| co.th             |         4 |
+| ac                |         4 |
 | go.it             |         4 |
-| co.tz             |         4 |
-| gda.pl            |         4 |
-| ms                |         4 |
-| powiat.pl         |         4 |
-| za.com            |         4 |
-| ma                |         4 |
+| wien              |         4 |
 | net.pl            |         4 |
+| tw                |         4 |
 | net.ua            |         4 |
-| bc.ca             |         4 |
-| gov               |         4 |
-| vg                |         3 |
-| com.es            |         3 |
-| ac.rw             |         3 |
-| vn                |         3 |
-| pe                |         3 |
-| gob.mx            |         3 |
-| edu.es            |         3 |
-| sa.com            |         3 |
-| ne.jp             |         3 |
-| uz                |         3 |
-| com.ru            |         3 |
-| my                |         3 |
-| ac                |         3 |
-| com.pe            |         3 |
-| gov.kz            |         3 |
-| biz.pl            |         3 |
-| go.th             |         3 |
-| info.at           |         3 |
-| or.cr             |         3 |
-| zgorzelec.pl      |         3 |
-| mc                |         3 |
-| ve                |         3 |
-| or.kr             |         3 |
-| mine.nu           |         3 |
-| in.ua             |         3 |
-| org.br            |         3 |
-| sklep.pl          |         3 |
-| radom.pl          |         3 |
+| co.hu             |         4 |
+| bayern            |         4 |
+| gov.ru            |         4 |
+| co.il             |         4 |
+| eus               |         4 |
+| gmbh              |         4 |
+| or.tz             |         4 |
+| kr                |         4 |
+| is                |         4 |
+| cci.fr            |         3 |
+| frl               |         3 |
+| ly                |         3 |
 | asn.au            |         3 |
-| org.na            |         3 |
+| zgorzelec.pl      |         3 |
+| or.cr             |         3 |
+| com.ph            |         3 |
+| re                |         3 |
+| com.gr            |         3 |
+| ph                |         3 |
+| cat               |         3 |
+| io                |         3 |
+| cn.com            |         3 |
 | mi.it             |         3 |
-| prd.fr            |         2 |
-| school.nz         |         2 |
-| pf                |         2 |
-| com.vn            |         2 |
-| kharkov.ua        |         2 |
-| jobs              |         2 |
-| no.com            |         2 |
-| ts.it             |         2 |
-| nieruchomosci.pl  |         2 |
-| livorno.it        |         2 |
-| hn                |         2 |
-| k12.ny.us         |         2 |
-| gov.it            |         2 |
-| ac.ir             |         2 |
-| gd                |         2 |
-| org.ee            |         2 |
-| poznan.pl         |         2 |
-| mt.us             |         2 |
-| com.kh            |         2 |
-| org.za            |         2 |
-| ar.com            |         2 |
-| dyndns.org        |         2 |
-| limanowa.pl       |         2 |
+| asso.fr           |         3 |
+| bc.ca             |         3 |
+| jobs              |         3 |
+| com.hr            |         3 |
+| am                |         3 |
+| co.tz             |         3 |
+| ra.it             |         3 |
+| my                |         3 |
 | dance             |         2 |
-| com.hk            |         2 |
-| presse.fr         |         2 |
-| info.tr           |         2 |
-| com.pt            |         2 |
-| legnica.pl        |         2 |
+| graphics          |         2 |
+| uz                |         2 |
+| livorno.it        |         2 |
+| waw.pl            |         2 |
+| school.nz         |         2 |
+| kharkov.ua        |         2 |
+| org.ee            |         2 |
+| k12.ny.us         |         2 |
+| com.ec            |         2 |
+| if.ua             |         2 |
+| pe                |         2 |
 | nc                |         2 |
-| zakopane.pl       |         2 |
-| govt.nz           |         2 |
-| al                |         2 |
-| ac.cr             |         2 |
-| ph                |         2 |
-| ca.us             |         2 |
-| camp              |         2 |
-| co.ug             |         2 |
-| gb.com            |         2 |
-| net.nz            |         2 |
-| gs                |         2 |
-| org.hn            |         2 |
-| av.tr             |         2 |
-| k12.tr            |         2 |
-| la                |         2 |
-| gov.af            |         2 |
 | co.rs             |         2 |
-| tm.se             |         2 |
-| gov.ar            |         2 |
-| rnu.tn            |         2 |
-| roma.it           |         2 |
-| torino.it         |         2 |
-| net.br            |         2 |
-| edu.bo            |         2 |
-| mk                |         2 |
-| kolobrzeg.pl      |         2 |
-| berlin            |         2 |
-| firenze.it        |         2 |
-| katowice.pl       |         2 |
+| to                |         2 |
+| org.br            |         2 |
+| ne.jp             |         2 |
+| digital           |         2 |
+| tirol             |         2 |
+| vg                |         2 |
+| coop              |         2 |
+| ts.it             |         2 |
+| la                |         2 |
+| energy            |         2 |
+| vn                |         2 |
 | sa.it             |         2 |
+| kolobrzeg.pl      |         2 |
 | pesarourbino.it   |         2 |
-| ks.ua             |         2 |
-| pruszkow.pl       |         2 |
-| schule            |         2 |
-| salerno.it        |         1 |
-| wa.gov.au         |         1 |
-| co.bw             |         1 |
-| or.id             |         1 |
-| akershus.no       |         1 |
-| napoli.it         |         1 |
-| notaires.fr       |         1 |
-| com.tn            |         1 |
-| modum.no          |         1 |
-| com.mt            |         1 |
-| gp                |         1 |
-| slupsk.pl         |         1 |
-| ug.gov.pl         |         1 |
-| olkusz.pl         |         1 |
-| gov.gr            |         1 |
-| io                |         1 |
-| digital           |         1 |
-| ug                |         1 |
-| bergamo.it        |         1 |
-| org.fj            |         1 |
-| na.it             |         1 |
-| kherson.ua        |         1 |
-| taranto.it        |         1 |
-| muni.il           |         1 |
-| im                |         1 |
-| kg                |         1 |
-| turystyka.pl      |         1 |
-| gliwice.pl        |         1 |
-| asso.mc           |         1 |
-| community         |         1 |
-| koeln             |         1 |
-| viterbo.it        |         1 |
-| com.dz            |         1 |
-| ae.org            |         1 |
-| org.ec            |         1 |
-| info.hu           |         1 |
-| net.ba            |         1 |
-| bel.tr            |         1 |
-| mincom.tn         |         1 |
-| catania.it        |         1 |
-| k12.mo.us         |         1 |
-| i.se              |         1 |
-| pp.ua             |         1 |
-| nf                |         1 |
-| rybnik.pl         |         1 |
-| ir                |         1 |
-| za.net            |         1 |
-| nrw               |         1 |
-| ac.za             |         1 |
-| org.in            |         1 |
-| org.mx            |         1 |
-| edu.lb            |         1 |
-| udine.it          |         1 |
-| milano.it         |         1 |
-| med.br            |         1 |
-| org.sg            |         1 |
-| org.ro            |         1 |
-| olsztyn.pl        |         1 |
-| kalisz.pl         |         1 |
-| pila.pl           |         1 |
-| mb.ca             |         1 |
-| cd                |         1 |
-| mp                |         1 |
-| bf                |         1 |
-| benevento.it      |         1 |
-| za.org            |         1 |
-| net.fj            |         1 |
-| com.uy            |         1 |
-| k12.or.us         |         1 |
-| org.sv            |         1 |
-| nogata.fukuoka.jp |         1 |
-| spb.ru            |         1 |
-| gov.mk            |         1 |
-| cuneo.it          |         1 |
-| pi.it             |         1 |
-| rimini.it         |         1 |
-| org.cn            |         1 |
-| lutsk.ua          |         1 |
-| pordenone.it      |         1 |
-| im.it             |         1 |
-| czeladz.pl        |         1 |
-| wroclaw.pl        |         1 |
-| elblag.pl         |         1 |
-| varese.it         |         1 |
-| org.eg            |         1 |
-| com.bd            |         1 |
-| com.zm            |         1 |
-| com.sa            |         1 |
-| sumy.ua           |         1 |
+| network           |         2 |
+| info.tr           |         2 |
+| limanowa.pl       |         2 |
+| ve                |         2 |
+| camp              |         2 |
+| com.ru            |         2 |
+| ru.com            |         2 |
+| ac.ir             |         2 |
+| av.tr             |         2 |
+| edu.ua            |         2 |
+| net.au            |         2 |
+| com.pe            |         2 |
+| rnu.tn            |         2 |
+| pm                |         2 |
+| hulsta.uk         |         2 |
+| agency            |         2 |
+| com.hk            |         2 |
+| rw                |         2 |
+| gov.ar            |         2 |
+| com.pt            |         2 |
+| gda.pl            |         2 |
+| com.es            |         2 |
+| prd.fr            |         2 |
 | vi.it             |         1 |
-| edu.do            |         1 |
-| pk                |         1 |
-| brand.se          |         1 |
-| edu.vn            |         1 |
-| gr.jp             |         1 |
-| surrey.sch.uk     |         1 |
-| biz.tr            |         1 |
-| m.se              |         1 |
-| opole.pl          |         1 |
-| bm                |         1 |
+| muni.il           |         1 |
+| company           |         1 |
+| cuneo.it          |         1 |
+| org.co            |         1 |
+| org.za            |         1 |
+| tt                |         1 |
+| org.mx            |         1 |
+| in.ua             |         1 |
+| ug.gov.pl         |         1 |
+| net.fj            |         1 |
+| kherson.ua        |         1 |
+| com.vn            |         1 |
+| mp                |         1 |
+| katowice.pl       |         1 |
 | slask.pl          |         1 |
-| hamburg           |         1 |
-| genova.it         |         1 |
-| dp.ua             |         1 |
-| go.id             |         1 |
-| ec                |         1 |
-| cr                |         1 |
-| cv                |         1 |
-| com.ro            |         1 |
-| wroc.pl           |         1 |
-| info.pl           |         1 |
-| dyndns.info       |         1 |
-| ac.tz             |         1 |
-| support           |         1 |
-| se.net            |         1 |
-| vu                |         1 |
-| alessandria.it    |         1 |
-| us.org            |         1 |
-| com.fj            |         1 |
-| fhs.no            |         1 |
-| su                |         1 |
-| gov.ma            |         1 |
-| palermo.it        |         1 |
-| gov.co            |         1 |
-| uk.net            |         1 |
-| fi.it             |         1 |
-| pv.it             |         1 |
-| org.ar            |         1 |
-| hants.sch.uk      |         1 |
-| bytom.pl          |         1 |
-| sosnowiec.pl      |         1 |
-| bydgoszcz.pl      |         1 |
+| gr.com            |         1 |
+| pp.ua             |         1 |
+| com.ve            |         1 |
+| hockey            |         1 |
+| legnica.pl        |         1 |
 | tj                |         1 |
+| gs                |         1 |
+| org.hn            |         1 |
+| co.cr             |         1 |
+| surrey.sch.uk     |         1 |
+| care              |         1 |
+| edu.lb            |         1 |
+| co.ke             |         1 |
+| md                |         1 |
+| family            |         1 |
+| murrelektronik.uk |         1 |
+| mincom.tn         |         1 |
 | sc                |         1 |
+| co.bw             |         1 |
+| org.cn            |         1 |
+| hn                |         1 |
+| com.sa            |         1 |
+| gov.it            |         1 |
+| ma                |         1 |
+| cr                |         1 |
+| sa.com            |         1 |
+| net.nz            |         1 |
+| k12.tr            |         1 |
+| med.br            |         1 |
+| uk.com            |         1 |
+| org.na            |         1 |
+| tn.it             |         1 |
+| edu.vn            |         1 |
+| k12.or.us         |         1 |
+| pk                |         1 |
+| info.pl           |         1 |
+| org.eg            |         1 |
+| gov.pl            |         1 |
+| com.fj            |         1 |
+| gov.co            |         1 |
+| support           |         1 |
+| ug                |         1 |
+| jpn.com           |         1 |
+| com.mk            |         1 |
+| wa.gov.au         |         1 |
+| org.fj            |         1 |
+| im.it             |         1 |
+| mk                |         1 |
+| go.th             |         1 |
+| org.sv            |         1 |
+| slupsk.pl         |         1 |
+| info.at           |         1 |
+| engineering       |         1 |
+| bf                |         1 |
+| gov.ua            |         1 |
+| center            |         1 |
+| mc                |         1 |
+| org.ro            |         1 |
+| co.ug             |         1 |
+| tax               |         1 |
+| com.tn            |         1 |
+| estate            |         1 |
+| green             |         1 |
+| sumy.ua           |         1 |
+| gov.kz            |         1 |
+| gr.jp             |         1 |
+| gov.ma            |         1 |
+| ks.ua             |         1 |
+| im                |         1 |
+| com.zm            |         1 |
+| spb.ru            |         1 |
+| online            |         1 |
+| systems           |         1 |
+| immobilien        |         1 |
+| com.kh            |         1 |
+| mine.nu           |         1 |
+| org.sg            |         1 |
+| news              |         1 |
+| gal               |         1 |
+| com.mt            |         1 |
+| mb.ca             |         1 |
+| unsa.ba           |         1 |
 +-------------------+-----------+
-424 rows in set (0,41 sec)
+336 rows in set (0,32 sec)
 
 
 mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM t3census_db.server s INNER JOIN t3census_db.cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip) LEFT JOIN t3census_db.host h ON (s.server_id = h.fk_server_id) LEFT JOIN t3census_db.cidr_maintainer m ON (c.fk_maintainer_id = m.maintainer_id) WHERE h.typo3_installed=1 AND m.own_infrastructure GROUP BY c.fk_maintainer_id HAVING num_hosts > 100 ORDER BY num_hosts DESC;
 +-----------------------------------------------------------------------+-----------+
 | maintainer_description                                                | num_hosts |
 +-----------------------------------------------------------------------+-----------+
-| Corporation Service Company (CSC), Wilmington, Delaware, US           |       959 |
-| DENIC eG, Germany                                                     |       627 |
-| B&K Verwaltungs GmbH, Germany                                         |       556 |
-| Vienna University Computer Center                                     |       418 |
-| Studienkreis GmbH, Gießen, DE                                         |       389 |
-| Musterhauskuechen                                                     |       350 |
-| RAe Boelsen, Jumpertz, Brochhaus & Kollegen, Koeln, Germany           |       337 |
-| Leibniz-Rechenzentrum (LRZ), Germany                                  |       335 |
-| m2p entertainment GmbH, Bochum, DE                                    |       332 |
-| Hypoport AG, Berlin, DE                                               |       317 |
-| TU Berlin, campus network                                             |       291 |
-| Danish Network for Research and Education                             |       261 |
-| Evangelische Landeskirche in Wuerttemberg, Germany                    |       246 |
-| Aarhus University, Denmark                                            |       199 |
-| Gottfried Wilhelm Leibniz Universitaet Hannover                       |       196 |
-| VNR Verlag für die Deutsche Wirtschaft AG, Bonn, DE                   |       194 |
-| Mjam GmbH, Wien, AT                                                   |       191 |
-| Bergische Universitaet Wuppertal                                      |       186 |
-| Republic of Slovenia - Ministry of Justice                            |       182 |
-| Charite - Universitaetsmedizin Berlin                                 |       178 |
-| WIR Bank Genossenschaft, Basel, CH                                    |       166 |
-| Universitaet zu Koeln                                                 |       164 |
-| Verlagsgesellschaft Madsack GmbH & Co., Hannover, DE                  |       161 |
+| Corporation Service Company (CSC), Wilmington, Delaware, US           |       819 |
+| B&K Verwaltungs GmbH, Germany                                         |       469 |
+| Vienna University Computer Center                                     |       406 |
+| Studienkreis GmbH, Gießen, DE                                         |       388 |
+| m2p entertainment GmbH, Bochum, DE                                    |       327 |
+| RAe Boelsen, Jumpertz, Brochhaus & Kollegen, Koeln, Germany           |       318 |
+| Musterhauskuechen                                                     |       315 |
+| Leibniz-Rechenzentrum (LRZ), Germany                                  |       303 |
+| TU Berlin, campus network                                             |       282 |
+| Hypoport AG, Berlin, DE                                               |       277 |
+| Evangelische Landeskirche in Wuerttemberg, Germany                    |       229 |
+| Danish Network for Research and Education                             |       206 |
+| Aarhus University, Denmark                                            |       183 |
+| Bergische Universitaet Wuppertal                                      |       182 |
+| Gottfried Wilhelm Leibniz Universitaet Hannover                       |       172 |
 | Feriendialyse Dr. Berger und Partner GbR, Wetzlar, DE                 |       159 |
-| Ostfalia Hochschule für angewandte Wissenschaften, Wolfenbüttel, DE   |       157 |
-| ACS Automotive Communication Services GmbH, Isernhagen, DE            |       136 |
-| Bitly Inc., US                                                        |       132 |
-| Universite Laval, Canada                                              |       131 |
-| Stadtverwaltung Winterthur, Winterthur, CH                            |       116 |
-| Sagaflor AG, Baunatal, DE                                             |       105 |
-| King College, Bristol, Tennessee, US                                  |       104 |
+| Ostfalia Hochschule für angewandte Wissenschaften, Wolfenbüttel, DE   |       149 |
+| Universitaet zu Koeln                                                 |       148 |
+| Republic of Slovenia - Ministry of Justice                            |       135 |
+| Mjam GmbH, Wien, AT                                                   |       116 |
 +-----------------------------------------------------------------------+-----------+
-31 rows in set (12,75 sec)
+20 rows in set (9,63 sec)
