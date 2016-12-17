@@ -10,6 +10,9 @@ require_once $vendorDir . '/autoload.php';
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Handler\GelfHandler;
+use Gelf\Publisher;
+use Gelf\Transport\UdpTransport;
 
 
 $gearmanHost = '127.0.0.1';
@@ -27,7 +30,7 @@ $datetimeCheckMaximum = $dt->format('Y-m-d H:i:s');
 // create a log channel
 $logger = new Logger('reprocess-typo3-hosts');
 $logger->pushHandler(new StreamHandler($logfile, Logger::INFO));
-//TODO graylog
+$logger->pushHandler(new GelfHandler(new Publisher(new UdpTransport('127.0.0.1', 12201)), Logger::DEBUG));
 
 
 $mysqli = @new mysqli('', '', '', '', 3306);
