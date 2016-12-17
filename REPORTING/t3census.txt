@@ -2,54 +2,51 @@ mysql> SELECT typo3_versionstring,count(host_id) FROM t3census_db.host WHERE typ
 +---------------------+----------------+
 | typo3_versionstring | count(host_id) |
 +---------------------+----------------+
-| NULL                |           2180 |
+| NULL                |           2189 |
 | TYPO3 3.6 CMS       |            337 |
 | TYPO3 3.7 CMS       |           1232 |
-| TYPO3 3.8 CMS       |           1528 |
-| TYPO3 4.0 CMS       |           2803 |
-| TYPO3 4.1 CMS       |           6329 |
-| TYPO3 4.2 CMS       |          13608 |
-| TYPO3 4.3 CMS       |           6063 |
-| TYPO3 4.4 CMS       |          11422 |
-| TYPO3 4.5 CMS       |          75144 |
-| TYPO3 4.6 CMS       |           6760 |
-| TYPO3 4.7 CMS       |          22966 |
+| TYPO3 3.8 CMS       |           1534 |
+| TYPO3 4.0 CMS       |           2810 |
+| TYPO3 4.1 CMS       |           6331 |
+| TYPO3 4.2 CMS       |          13610 |
+| TYPO3 4.3 CMS       |           6065 |
+| TYPO3 4.4 CMS       |          11441 |
+| TYPO3 4.5 CMS       |          75241 |
+| TYPO3 4.6 CMS       |           6762 |
+| TYPO3 4.7 CMS       |          23034 |
 | TYPO3 6.0 CMS       |           3110 |
-| TYPO3 6.1 CMS       |           9875 |
-| TYPO3 6.2 CMS       |          74664 |
+| TYPO3 6.1 CMS       |           9891 |
+| TYPO3 6.2 CMS       |          74894 |
 | TYPO3 6.3 CMS       |              6 |
 | TYPO3 7.0 CMS       |             87 |
 | TYPO3 7.1 CMS       |            144 |
 | TYPO3 7.2 CMS       |             96 |
 | TYPO3 7.3 CMS       |             46 |
-| TYPO3 7.6 CMS       |           8235 |
+| TYPO3 7.6 CMS       |           8276 |
 | TYPO3 8.0 CMS       |              1 |
 | TYPO3 8.1 CMS       |              3 |
 | TYPO3 8.2 CMS       |              3 |
-| TYPO3 8.3 CMS       |           8531 |
-| TYPO3 8.4 CMS       |           1154 |
+| TYPO3 8.3 CMS       |           8568 |
+| TYPO3 8.4 CMS       |           1155 |
 | TYPO3 9.0 CMS       |             22 |
 | TYPO3 9.9 CMS       |              1 |
 +---------------------+----------------+
-28 rows in set (0,94 sec)
 
 
 mysql> SELECT COUNT(host_id) FROM t3census_db.host WHERE typo3_installed;
 +----------------+
 | COUNT(host_id) |
 +----------------+
-|         256350 |
+|         256889 |
 +----------------+
-1 row in set (0,20 sec)
 
 
 mysql> SELECT COUNT(DISTINCT host_domain) FROM t3census_db.host WHERE typo3_installed;
 +-----------------------------+
 | COUNT(DISTINCT host_domain) |
 +-----------------------------+
-|                      148618 |
+|                      148988 |
 +-----------------------------+
-1 row in set (0,47 sec)
 
 
 mysql> SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.host WHERE typo3_installed=1 AND host_suffix IS NOT NULL GROUP BY host_suffix ORDER BY num_hosts DESC;
@@ -57,40 +54,40 @@ SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.
 +-------------------+-----------+
 | publicSuffix      | num_hosts |
 +-------------------+-----------+
-| de                |    171511 |
-| com               |     25740 |
-| ch                |     19713 |
-| at                |      5430 |
-| dk                |      4459 |
-| eu                |      3758 |
-| info              |      3746 |
-| nl                |      3057 |
-| org               |      2640 |
-| net               |      2237 |
+| de                |    171567 |
+| com               |     25865 |
+| ch                |     19766 |
+| at                |      5587 |
+| dk                |      4461 |
+| eu                |      3765 |
+| info              |      3748 |
+| nl                |      3125 |
+| org               |      2643 |
+| net               |      2241 |
 | biz               |      1542 |
-| fr                |      1448 |
-| pl                |      1037 |
-| be                |      1031 |
+| fr                |      1450 |
+| pl                |      1038 |
+| be                |      1032 |
 | sk                |       929 |
-| it                |       884 |
-| se                |       712 |
-| ac.at             |       451 |
+| it                |       912 |
+| se                |       713 |
+| ac.at             |       452 |
 | ru                |       320 |
 | cz                |       314 |
-| es                |       267 |
+| es                |       268 |
 | no                |       263 |
-| co.uk             |       248 |
+| co.uk             |       250 |
 | ca                |       225 |
 | hu                |       223 |
 | si                |       220 |
 | us                |       215 |
 | ag                |       207 |
-| ro                |       174 |
-| tv                |       145 |
-| cc                |       122 |
-| fi                |       112 |
-| gr                |       108 |
+| ro                |       175 |
+| tv                |       147 |
+| cc                |       123 |
+| fi                |       113 |
 | com.au            |       108 |
+| gr                |       108 |
 | co.at             |       104 |
 | qc.ca             |        92 |
 | in                |        87 |
@@ -101,8 +98,8 @@ SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.
 | com.tr            |        56 |
 | ud.it             |        53 |
 | edu.pl            |        53 |
-| ie                |        50 |
 | lv                |        50 |
+| ie                |        50 |
 | li                |        49 |
 | cn                |        47 |
 | gov.rw            |        46 |
@@ -112,100 +109,95 @@ SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.
 | nu                |        38 |
 | co.jp             |        37 |
 | com.pl            |        32 |
+| pt                |        31 |
 | com.ua            |        31 |
 | gv.at             |        30 |
-| pt                |        30 |
 | tm.fr             |        30 |
 | jp                |        28 |
 | org.uk            |        28 |
 | org.pl            |        27 |
-| saarland          |        26 |
 | nrw               |        26 |
 | co.za             |        26 |
+| saarland          |        26 |
 | ac.fj             |        23 |
-| rs                |        22 |
 | pu.it             |        22 |
 | gl                |        22 |
 | sh                |        22 |
+| bz.it             |        22 |
 | berlin            |        22 |
+| rs                |        22 |
 | org.ua            |        20 |
 | aero              |        19 |
+| ua                |        18 |
 | chambagri.fr      |        18 |
 | swiss             |        18 |
-| ua                |        17 |
 | ba                |        17 |
-| lt                |        16 |
-| cl                |        16 |
 | travel            |        16 |
 | bg                |        16 |
+| lt                |        16 |
+| cl                |        16 |
 | ac.uk             |        15 |
-| bz.it             |        15 |
 | com.cn            |        15 |
 | org.au            |        14 |
-| ruhr              |        13 |
-| com.sg            |        13 |
 | or.at             |        13 |
 | ae                |        13 |
-| com.de            |        12 |
+| ruhr              |        13 |
+| com.sg            |        13 |
 | pn.it             |        12 |
 | lviv.ua           |        12 |
-| st                |        11 |
-| gov.tn            |        11 |
-| com.ar            |        11 |
-| mobi              |        11 |
-| kz                |        11 |
+| st                |        12 |
+| com.de            |        12 |
 | eu.com            |        11 |
 | co                |        11 |
 | com.mx            |        11 |
 | hamburg           |        11 |
+| gov.tn            |        11 |
+| com.ar            |        11 |
+| mobi              |        11 |
+| kz                |        11 |
 | me                |        10 |
 | asia              |        10 |
 | int               |        10 |
 | edu.co            |        10 |
 | co.kr             |        10 |
 | org.nz            |        10 |
-| name              |         9 |
-| ws                |         9 |
 | sg                |         9 |
 | co.id             |         9 |
-| tn                |         8 |
+| name              |         9 |
+| ws                |         9 |
 | co.in             |         8 |
 | global            |         8 |
-| cx                |         7 |
-| com.co            |         7 |
-| koeln             |         7 |
-| mx                |         7 |
-| by                |         7 |
+| tn                |         8 |
 | schule            |         7 |
 | media             |         7 |
 | edu.es            |         7 |
 | br                |         7 |
 | fm                |         7 |
 | pro               |         7 |
-| as                |         6 |
-| nhs.uk            |         6 |
-| or.jp             |         6 |
+| cx                |         7 |
+| com.co            |         7 |
+| koeln             |         7 |
+| mx                |         7 |
+| by                |         7 |
 | hk                |         6 |
 | com.my            |         6 |
 | gov.uk            |         6 |
 | bz                |         6 |
 | com.na            |         6 |
-| com.tw            |         5 |
-| sk.ca             |         5 |
-| plus              |         5 |
-| org.tr            |         5 |
-| gouv.fr           |         5 |
+| as                |         6 |
+| nhs.uk            |         6 |
+| tirol             |         6 |
+| or.jp             |         6 |
 | nat.tn            |         5 |
 | fo                |         5 |
 | gov               |         5 |
 | ms                |         5 |
 | rn.it             |         5 |
-| com.ba            |         4 |
-| grosseto.it       |         4 |
-| kiev.ua           |         4 |
-| museum            |         4 |
-| dyndns.info       |         4 |
-| tirol             |         4 |
+| com.tw            |         5 |
+| sk.ca             |         5 |
+| plus              |         5 |
+| org.tr            |         5 |
+| gouv.fr           |         5 |
 | co.th             |         4 |
 | ac                |         4 |
 | go.it             |         4 |
@@ -217,23 +209,18 @@ SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.
 | bayern            |         4 |
 | gov.ru            |         4 |
 | co.il             |         4 |
+| business          |         4 |
 | eus               |         4 |
 | gmbh              |         4 |
 | kr                |         4 |
 | or.tz             |         4 |
 | is                |         4 |
 | bio               |         4 |
-| cci.fr            |         3 |
-| frl               |         3 |
-| ly                |         3 |
-| asn.au            |         3 |
-| zgorzelec.pl      |         3 |
-| or.cr             |         3 |
-| com.ph            |         3 |
-| ph                |         3 |
-| cat               |         3 |
-| re                |         3 |
-| com.gr            |         3 |
+| com.ba            |         4 |
+| grosseto.it       |         4 |
+| kiev.ua           |         4 |
+| museum            |         4 |
+| dyndns.info       |         4 |
 | energy            |         3 |
 | io                |         3 |
 | cn.com            |         3 |
@@ -247,22 +234,17 @@ SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.
 | co.tz             |         3 |
 | ra.it             |         3 |
 | my                |         3 |
-| waw.pl            |         2 |
-| livorno.it        |         2 |
-| school.nz         |         2 |
-| kharkov.ua        |         2 |
-| k12.ny.us         |         2 |
-| com.ec            |         2 |
-| org.ee            |         2 |
-| pe                |         2 |
-| if.ua             |         2 |
-| co.rs             |         2 |
-| nc                |         2 |
-| to                |         2 |
-| org.br            |         2 |
-| ne.jp             |         2 |
-| vg                |         2 |
-| digital           |         2 |
+| cci.fr            |         3 |
+| frl               |         3 |
+| ly                |         3 |
+| asn.au            |         3 |
+| zgorzelec.pl      |         3 |
+| or.cr             |         3 |
+| com.ph            |         3 |
+| ph                |         3 |
+| cat               |         3 |
+| re                |         3 |
+| com.gr            |         3 |
 | coop              |         2 |
 | vn                |         2 |
 | sa.it             |         2 |
@@ -295,49 +277,28 @@ SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.
 | graphics          |         2 |
 | dance             |         2 |
 | uz                |         2 |
-| net.fj            |         1 |
-| in.ua             |         1 |
-| ug.gov.pl         |         1 |
-| kherson.ua        |         1 |
-| com.vn            |         1 |
-| mp                |         1 |
-| gr.com            |         1 |
-| katowice.pl       |         1 |
-| slask.pl          |         1 |
-| pp.ua             |         1 |
-| com.ve            |         1 |
-| org.hn            |         1 |
-| hockey            |         1 |
-| legnica.pl        |         1 |
-| tj                |         1 |
-| gs                |         1 |
-| edu.lb            |         1 |
-| co.cr             |         1 |
-| surrey.sch.uk     |         1 |
-| care              |         1 |
-| murrelektronik.uk |         1 |
-| co.ke             |         1 |
-| md                |         1 |
-| family            |         1 |
-| dog               |         1 |
-| co.bw             |         1 |
-| mincom.tn         |         1 |
-| sc                |         1 |
-| com.sa            |         1 |
-| gov.it            |         1 |
-| org.cn            |         1 |
-| hn                |         1 |
-| wine              |         1 |
-| ma                |         1 |
-| cr                |         1 |
-| sa.com            |         1 |
-| net.nz            |         1 |
-| org.gr            |         1 |
+| waw.pl            |         2 |
+| livorno.it        |         2 |
+| school.nz         |         2 |
+| kharkov.ua        |         2 |
+| k12.ny.us         |         2 |
+| com.ec            |         2 |
+| org.ee            |         2 |
+| pe                |         2 |
+| if.ua             |         2 |
+| co.rs             |         2 |
+| nc                |         2 |
+| to                |         2 |
+| org.br            |         2 |
+| ne.jp             |         2 |
+| vg                |         2 |
+| digital           |         2 |
 | org.na            |         1 |
 | tn.it             |         1 |
 | k12.tr            |         1 |
 | med.br            |         1 |
 | uk.com            |         1 |
+| org.gr            |         1 |
 | k12.or.us         |         1 |
 | edu.vn            |         1 |
 | org.eg            |         1 |
@@ -345,9 +306,9 @@ SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.
 | info.pl           |         1 |
 | com.fj            |         1 |
 | gov.pl            |         1 |
-| ug                |         1 |
 | gov.co            |         1 |
 | support           |         1 |
+| ug                |         1 |
 | wa.gov.au         |         1 |
 | org.fj            |         1 |
 | jpn.com           |         1 |
@@ -357,11 +318,13 @@ SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.
 | im.it             |         1 |
 | mk                |         1 |
 | slupsk.pl         |         1 |
+| cepsports.nz      |         1 |
 | bf                |         1 |
 | info.at           |         1 |
 | engineering       |         1 |
 | gov.ua            |         1 |
 | center            |         1 |
+| technology        |         1 |
 | mc                |         1 |
 | org.ro            |         1 |
 | co.ug             |         1 |
@@ -372,17 +335,17 @@ SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.
 | estate            |         1 |
 | gov.kz            |         1 |
 | gr.jp             |         1 |
-| events            |         1 |
 | com.zm            |         1 |
 | spb.ru            |         1 |
 | gov.ma            |         1 |
 | ks.ua             |         1 |
 | im                |         1 |
+| events            |         1 |
 | online            |         1 |
 | systems           |         1 |
 | immobilien        |         1 |
-| reisen            |         1 |
 | com.kh            |         1 |
+| reisen            |         1 |
 | gal               |         1 |
 | mine.nu           |         1 |
 | org.sg            |         1 |
@@ -398,8 +361,46 @@ SELECT host_suffix AS publicSuffix,COUNT(host_id) AS num_hosts FROM t3census_db.
 | tt                |         1 |
 | org.mx            |         1 |
 | org.co            |         1 |
+| net.fj            |         1 |
+| in.ua             |         1 |
+| ug.gov.pl         |         1 |
+| kherson.ua        |         1 |
+| com.vn            |         1 |
+| mp                |         1 |
+| gr.com            |         1 |
+| katowice.pl       |         1 |
+| slask.pl          |         1 |
+| pp.ua             |         1 |
+| com.ve            |         1 |
+| software          |         1 |
+| org.hn            |         1 |
+| hockey            |         1 |
+| legnica.pl        |         1 |
+| tj                |         1 |
+| gs                |         1 |
+| edu.lb            |         1 |
+| co.cr             |         1 |
+| surrey.sch.uk     |         1 |
+| care              |         1 |
+| consulting        |         1 |
+| murrelektronik.uk |         1 |
+| co.ke             |         1 |
+| md                |         1 |
+| family            |         1 |
+| co.bw             |         1 |
+| mincom.tn         |         1 |
+| sc                |         1 |
+| dog               |         1 |
+| com.sa            |         1 |
+| gov.it            |         1 |
+| org.cn            |         1 |
+| hn                |         1 |
+| ma                |         1 |
+| cr                |         1 |
+| wine              |         1 |
+| sa.com            |         1 |
+| net.nz            |         1 |
 +-------------------+-----------+
-341 rows in set (0,32 sec)
 
 
 mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM t3census_db.server s INNER JOIN t3census_db.cidr c ON ((c.cidr_mask & s.server_ip) = c.cidr_ip) LEFT JOIN t3census_db.host h ON (s.server_id = h.fk_server_id) LEFT JOIN t3census_db.cidr_maintainer m ON (c.fk_maintainer_id = m.maintainer_id) WHERE h.typo3_installed=1 AND m.own_infrastructure GROUP BY c.fk_maintainer_id HAVING num_hosts > 100 ORDER BY num_hosts DESC;
@@ -408,12 +409,12 @@ mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM t3cens
 +-----------------------------------------------------------------------+-----------+
 | Corporation Service Company (CSC), Wilmington, Delaware, US           |       819 |
 | B&K Verwaltungs GmbH, Germany                                         |       469 |
-| Vienna University Computer Center                                     |       406 |
+| Vienna University Computer Center                                     |       407 |
 | Studienkreis GmbH, Gießen, DE                                         |       388 |
 | m2p entertainment GmbH, Bochum, DE                                    |       327 |
 | RAe Boelsen, Jumpertz, Brochhaus & Kollegen, Koeln, Germany           |       318 |
 | Musterhauskuechen                                                     |       315 |
-| Leibniz-Rechenzentrum (LRZ), Germany                                  |       305 |
+| Leibniz-Rechenzentrum (LRZ), Germany                                  |       306 |
 | TU Berlin, campus network                                             |       282 |
 | Hypoport AG, Berlin, DE                                               |       277 |
 | Evangelische Landeskirche in Wuerttemberg, Germany                    |       229 |
@@ -429,4 +430,3 @@ mysql> SELECT m.maintainer_description,COUNT(h.host_id) AS num_hosts FROM t3cens
 | LANXESS Deutschland GmbH, Leverkusen, DE                              |       108 |
 | DocCheck AG, Köln, DE                                                 |       101 |
 +-----------------------------------------------------------------------+-----------+
-22 rows in set (10,46 sec)
